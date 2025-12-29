@@ -1,0 +1,117 @@
+load("@rules_java//java:defs.bzl", "java_binary", "java_library")
+
+java_library(
+    name = "resources",
+    resources = glob(["src/main/resources/**/*"]),
+    visibility = ["//visibility:public"],
+)
+
+java_binary(
+    name = "Generator",
+    main_class = "org.finos.legend.pure.runtime.java.compiled.generation.orchestrator.JavaCodeGeneration",
+    runtime_deps = [
+        ":boot",
+        "//legend-pure/legend-pure-runtime/legend-pure-runtime-java-engine-compiled:legend-pure-runtime-java-engine-compiled",
+        "//legend-pure/legend-pure-dsl/legend-pure-dsl-diagram/legend-pure-m2-dsl-diagram-grammar",
+        "//legend-pure/legend-pure-dsl/legend-pure-dsl-graph/legend-pure-m2-dsl-graph-grammar",
+        "//legend-pure/legend-pure-dsl/legend-pure-dsl-mapping/legend-pure-m2-dsl-mapping-grammar",
+        "//legend-pure/legend-pure-dsl/legend-pure-dsl-path/legend-pure-m2-dsl-path-grammar",
+        "//legend-pure/legend-pure-dsl/legend-pure-dsl-store/legend-pure-m2-dsl-store-grammar",
+        "//legend-pure/legend-pure-dsl/legend-pure-dsl-store/legend-pure-m2-dsl-store-pure",
+        "//legend-pure/legend-pure-dsl/legend-pure-dsl-tds/legend-pure-m2-dsl-tds-grammar",
+        "//legend-pure/legend-pure-core/legend-pure-m3-core:legend-pure-m3-core",
+        "//legend-pure/legend-pure-core/legend-pure-m4:legend-pure-m4",
+        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-json/legend-engine-pure-functions-json-pure",
+        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-standard/legend-engine-pure-functions-standard-pure",
+        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-relation/legend-engine-pure-functions-relation-pure",
+        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-variant/legend-engine-pure-functions-variant-pure",
+        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-unclassified/legend-engine-pure-functions-unclassified-pure",
+        "//legend-pure/legend-pure-dsl/legend-pure-dsl-store/legend-pure-runtime-java-extension-compiled-dsl-store",
+        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-json/legend-engine-pure-runtime-java-extension-compiled-functions-json",
+        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-standard/legend-engine-pure-runtime-java-extension-compiled-functions-standard",
+        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-unclassified/legend-engine-pure-runtime-java-extension-compiled-functions-unclassified",
+        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-variant/legend-engine-pure-runtime-java-extension-compiled-functions-variant",
+        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-relation/legend-engine-pure-runtime-java-extension-compiled-functions-relation",
+        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-platform-modular-generation/legend-engine-pure-platform-dsl-path-java",
+        "@maven//:com_googlecode_json_simple_json_simple",
+        "@maven//:org_eclipse_collections_eclipse_collections",
+        "@maven//:org_eclipse_collections_eclipse_collections_api",
+        "//legend-pure/legend-pure-store/legend-pure-store-relational/legend-pure-runtime-java-extension-compiled-store-relational",
+        "//legend-pure/legend-pure-store/legend-pure-store-relational/legend-pure-m2-store-relational-grammar",
+        "//legend-pure/legend-pure-store/legend-pure-store-relational/legend-pure-m2-store-relational-pure",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+genrule(
+    name = "generate_sources",
+    outs = ["core_src.srcjar"],
+    cmd = """
+        mkdir -p work_dir/classes
+        mkdir -p work_dir/target
+
+        $(location :Generator) \
+            core \
+            work_dir/classes \
+            work_dir/target
+
+        if [ -d work_dir/target/generated-sources ]; then
+             cd work_dir/target/generated-sources
+             zip -q -r ../../../$(location core_src.srcjar) .
+             cd ../../..
+        elif [ -d work_dir/target/generated-test-sources ]; then
+             cd work_dir/target/generated-test-sources
+             zip -q -r ../../../$(location core_src.srcjar) .
+             cd ../../..
+        else
+             echo "No sources generated"
+             exit 1
+        fi
+    """,
+    tools = [":Generator"],
+    visibility = ["//visibility:public"],
+)
+
+
+java_library(
+    name = "boot",
+    srcs = glob(["src/main/java/**/*.java"]),
+    resources = glob(["src/main/resources/**/*"]),
+    deps = [
+        "//legend-pure/legend-pure-core/legend-pure-m3-core:legend-pure-m3-core",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+java_library(
+    name = "legend-engine-pure-code-compiled-core",
+    srcs = [":core_src.srcjar"],
+    deps = [
+        ":boot",
+        "//legend-pure/legend-pure-runtime/legend-pure-runtime-java-engine-compiled:legend-pure-runtime-java-engine-compiled",
+        "//legend-pure/legend-pure-core/legend-pure-m3-core:legend-pure-m3-core",
+        "//legend-pure/legend-pure-core/legend-pure-m4:legend-pure-m4",
+        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-json/legend-engine-pure-functions-json-pure",
+        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-standard/legend-engine-pure-functions-standard-pure",
+        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-relation/legend-engine-pure-functions-relation-pure",
+        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-variant/legend-engine-pure-functions-variant-pure",
+        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-unclassified/legend-engine-pure-functions-unclassified-pure",
+        "//legend-pure/legend-pure-dsl/legend-pure-dsl-store/legend-pure-runtime-java-extension-compiled-dsl-store",
+        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-json/legend-engine-pure-runtime-java-extension-compiled-functions-json",
+        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-standard/legend-engine-pure-runtime-java-extension-compiled-functions-standard",
+        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-unclassified/legend-engine-pure-runtime-java-extension-compiled-functions-unclassified",
+        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-variant/legend-engine-pure-runtime-java-extension-compiled-functions-variant",
+        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-relation/legend-engine-pure-runtime-java-extension-compiled-functions-relation",
+        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-platform-modular-generation/legend-engine-pure-platform-dsl-path-java",
+        "//legend-pure/legend-pure-dsl/legend-pure-dsl-diagram/legend-pure-runtime-java-extension-compiled-dsl-diagram",
+        "//legend-pure/legend-pure-dsl/legend-pure-dsl-graph/legend-pure-runtime-java-extension-compiled-dsl-graph",
+        "//legend-pure/legend-pure-dsl/legend-pure-dsl-mapping/legend-pure-runtime-java-extension-compiled-dsl-mapping",
+        "//legend-pure/legend-pure-dsl/legend-pure-dsl-path/legend-pure-runtime-java-extension-compiled-dsl-path",
+        "//legend-pure/legend-pure-dsl/legend-pure-dsl-tds/legend-pure-runtime-java-extension-compiled-dsl-tds",
+        "//legend-pure/legend-pure-store/legend-pure-store-relational/legend-pure-runtime-java-extension-compiled-store-relational",
+        "@maven//:org_eclipse_collections_eclipse_collections",
+        "@maven//:org_eclipse_collections_eclipse_collections_api",
+        "@maven//:com_googlecode_json_simple_json_simple",
+    ],
+    visibility = ["//visibility:public"],
+)

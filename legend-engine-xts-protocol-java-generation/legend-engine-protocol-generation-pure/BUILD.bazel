@@ -1,0 +1,73 @@
+load("@rules_java//java:defs.bzl", "java_binary", "java_library")
+
+java_library(
+    name = "resources",
+    resources = glob(["src/main/resources/**/*"]),
+    visibility = ["//visibility:public"],
+)
+
+java_binary(
+    name = "Generator",
+    main_class = "org.finos.legend.pure.runtime.java.compiled.generation.orchestrator.JavaCodeGeneration",
+    runtime_deps = [
+        "//legend-pure/legend-pure-runtime/legend-pure-runtime-java-engine-compiled:legend-pure-runtime-java-engine-compiled",
+        "//legend-pure/legend-pure-core/legend-pure-m3-core:legend-pure-m3-core",
+        "//legend-pure/legend-pure-core/legend-pure-m4:legend-pure-m4",
+        "//legend-pure/legend-pure-dsl/legend-pure-dsl-diagram/legend-pure-m2-dsl-diagram-grammar",
+        "//legend-pure/legend-pure-dsl/legend-pure-dsl-store/legend-pure-m2-dsl-store-grammar",
+        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-compiled-core",
+        "//legend-engine/legend-engine-xts-java/legend-engine-xt-javaGeneration-pure",
+        "//legend-engine/legend-engine-xts-java/legend-engine-xt-javaGeneration-conventions-essential-pure",
+        "//legend-engine/legend-engine-xts-java/legend-engine-xt-javaGeneration-conventions-standard-pure",
+        ":resources",
+        "@maven//:org_eclipse_collections_eclipse_collections",
+        "@maven//:org_eclipse_collections_eclipse_collections_api",
+        "@maven//:com_googlecode_json_simple_json_simple",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+genrule(
+    name = "generate_sources",
+    outs = ["core_protocol_generation_src.srcjar"],
+    cmd = """
+        mkdir -p work_dir/classes
+        mkdir -p work_dir/target
+
+        $(location :Generator) \
+            core_protocol_generation \
+            work_dir/classes \
+            work_dir/target
+
+        if [ -d work_dir/target/generated-sources ]; then
+             cd work_dir/target/generated-sources
+             zip -q -r ../../../$(location core_protocol_generation_src.srcjar) .
+             cd ../../..
+        else
+             echo "No sources generated"
+             exit 1
+        fi
+    """,
+    tools = [":Generator"],
+    visibility = ["//visibility:public"],
+)
+
+java_library(
+    name = "legend-engine-protocol-generation-pure",
+    srcs = glob(["src/main/java/**/*.java"]) + [":core_protocol_generation_src.srcjar"],
+    deps = [
+        ":resources",
+        "//legend-pure/legend-pure-runtime/legend-pure-runtime-java-engine-compiled:legend-pure-runtime-java-engine-compiled",
+        "//legend-pure/legend-pure-core/legend-pure-m3-core:legend-pure-m3-core",
+        "//legend-pure/legend-pure-core/legend-pure-m4:legend-pure-m4",
+        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-compiled-core",
+        "//legend-engine/legend-engine-xts-java/legend-engine-xt-javaGeneration-pure",
+        "//legend-engine/legend-engine-xts-java/legend-engine-xt-javaGeneration-conventions-essential-pure",
+        "//legend-engine/legend-engine-xts-java/legend-engine-xt-javaGeneration-conventions-standard-pure",
+        "//legend-pure/legend-pure-dsl/legend-pure-dsl-store/legend-pure-runtime-java-extension-compiled-dsl-store",
+        "@maven//:org_eclipse_collections_eclipse_collections",
+        "@maven//:org_eclipse_collections_eclipse_collections_api",
+        "@maven//:com_googlecode_json_simple_json_simple",
+    ],
+    visibility = ["//visibility:public"],
+)

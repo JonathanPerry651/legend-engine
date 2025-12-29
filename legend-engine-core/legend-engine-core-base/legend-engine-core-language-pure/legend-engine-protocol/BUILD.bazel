@@ -1,0 +1,15 @@
+
+java_library(
+    name = "legend-engine-protocol",
+    srcs = [
+        "src/main/java/org/finos/legend/engine/protocol/AnyDeserializer.java",
+        "src/main/java/org/finos/legend/engine/protocol/Protocol.java",
+        "src/main/java/org/finos/legend/engine/protocol/pure/m3/SourceInformation.java",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        "@maven//:com_fasterxml_jackson_core_jackson_annotations",
+        "@maven//:com_fasterxml_jackson_core_jackson_core",
+        "@maven//:com_fasterxml_jackson_core_jackson_databind",
+    ],
+)

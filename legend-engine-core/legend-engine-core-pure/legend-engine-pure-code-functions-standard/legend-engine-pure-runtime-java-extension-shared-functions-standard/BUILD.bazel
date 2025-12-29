@@ -1,0 +1,14 @@
+load("@rules_java//java:defs.bzl", "java_library")
+
+java_library(
+    name = "legend-engine-pure-runtime-java-extension-shared-functions-standard",
+    srcs = glob(["src/main/java/**/*.java"]),
+    deps = [
+        "//legend-pure/legend-pure-core/legend-pure-m3-core:legend-pure-m3-core",
+        "//legend-pure/legend-pure-core/legend-pure-m4:legend-pure-m4",
+        "//legend-pure/legend-pure-runtime/legend-pure-runtime-java-engine-shared",
+        "@maven//:org_eclipse_collections_eclipse_collections",
+        "@maven//:org_eclipse_collections_eclipse_collections_api",
+    ],
+    visibility = ["//visibility:public"],
+)

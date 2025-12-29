@@ -23,25 +23,25 @@ import org.finos.legend.engine.protocol.pure.v1.model.context.PackageableElement
 import org.finos.legend.engine.protocol.pure.v1.model.context.PackageableElementType;
 import org.finos.legend.engine.protocol.pure.v1.model.packageableElement.store.StoreProviderPointer;
 import org.finos.legend.pure.generated.Root_meta_external_store_model_ModelStore_Impl;
-import org.finos.legend.pure.m3.coreinstance.meta.pure.store.Store;
+import org.finos.legend.pure.m3.coreinstance.meta.pure.metamodel.PackageableElement;
 
 import java.util.Map;
 
 public interface StoreProviderCompilerHelper
 {
-    default Map<PackageableElementType, Function2<StoreProviderPointer, CompileContext, Store>> getExtraStoreProviderHandlers()
+    default Map<PackageableElementType, Function2<StoreProviderPointer, CompileContext, PackageableElement>> getExtraStoreProviderHandlers()
     {
         return Maps.mutable.empty();
     }
 
-    static Store getStoreFromPackageableElementPointer(PackageableElementPointer packageableElementPointer, CompileContext context)
+    static PackageableElement getStoreFromPackageableElementPointer(PackageableElementPointer packageableElementPointer, CompileContext context)
     {
         StoreProviderPointer storeProviderPointer = new StoreProviderPointer(packageableElementPointer.type, packageableElementPointer.path, packageableElementPointer.sourceInformation);
         if (storeProviderPointer.path.equals("ModelStore"))
         {
             return new Root_meta_external_store_model_ModelStore_Impl("", null, context.pureModel.getClass("meta::external::store::model::ModelStore"));
         }
-        Map<PackageableElementType, Function2<StoreProviderPointer, CompileContext, Store>> extraStoreProviderPointerHandlers = Maps.mutable.empty();
+        Map<PackageableElementType, Function2<StoreProviderPointer, CompileContext, PackageableElement>> extraStoreProviderPointerHandlers = Maps.mutable.empty();
         ListIterate
                 .selectInstancesOf(CompilerExtensions.fromAvailableExtensions().getExtensions(), StoreProviderCompilerHelper.class)
                 .forEach(e -> extraStoreProviderPointerHandlers.putAll(e.getExtraStoreProviderHandlers()));

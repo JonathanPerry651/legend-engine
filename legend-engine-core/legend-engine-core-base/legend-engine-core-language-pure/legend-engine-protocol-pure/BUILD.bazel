@@ -1,0 +1,74 @@
+load("@rules_java//java:defs.bzl", "java_binary", "java_library")
+
+java_binary(
+    name = "Generator",
+    main_class = "org.finos.legend.engine.protocol.generation.GenerateMetaClasses",
+    runtime_deps = [
+        "//legend-engine/legend-engine-xts-protocol-java-generation/legend-engine-protocol-generation",
+        "//legend-pure/legend-pure-dsl/legend-pure-dsl-mapping/legend-pure-runtime-java-extension-compiled-dsl-mapping",
+        "//legend-pure/legend-pure-dsl/legend-pure-dsl-mapping/legend-pure-m2-dsl-mapping-pure",
+        "//legend-pure/legend-pure-dsl/legend-pure-dsl-path/legend-pure-m2-dsl-path-grammar",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+genrule(
+    name = "generate_sources",
+    srcs = ["src/main/resources/m3.protocol.json"],
+    outs = ["protocol_pure_src.srcjar"],
+    cmd = """
+        mkdir -p work_dir/generated-sources
+
+        $(location :Generator) \
+            $(location src/main/resources/m3.protocol.json) \
+            work_dir/generated-sources
+
+        if [ -d work_dir/generated-sources ]; then
+             cd work_dir/generated-sources
+             zip -q -r ../../$(location protocol_pure_src.srcjar) .
+             cd ../../..
+        else
+             echo "No sources generated"
+             exit 1
+        fi
+    """,
+    tools = [":Generator"],
+    visibility = ["//visibility:public"],
+)
+
+java_library(
+    name = "legend-engine-protocol-pure",
+    srcs = [":protocol_pure_src.srcjar"],
+    resources = glob(["src/main/resources/**/*"]),
+    deps = [
+        "//legend-engine/legend-engine-core/legend-engine-core-base/legend-engine-core-language-pure/legend-engine-protocol",
+        "//legend-engine/legend-engine-core/legend-engine-core-shared/legend-engine-shared-extensions",
+        "@maven//:com_fasterxml_jackson_core_jackson_annotations",
+        "@maven//:com_fasterxml_jackson_core_jackson_core",
+        "@maven//:com_fasterxml_jackson_core_jackson_databind",
+        "@maven//:org_eclipse_collections_eclipse_collections",
+        "@maven//:org_eclipse_collections_eclipse_collections_api",
+        "@maven//:org_mongodb_bson",
+        "@maven//:org_slf4j_slf4j_api",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+java_library(
+    name = "protocol-pure-v1",
+    srcs = glob(["src/main/java/**/*.java"]),
+    resources = glob(["src/main/resources/**/*"]),
+    deps = [
+        "//legend-engine/legend-engine-core/legend-engine-core-base/legend-engine-core-language-pure/legend-engine-protocol",
+        "//legend-engine/legend-engine-core/legend-engine-core-shared/legend-engine-shared-extensions",
+        "//legend-pure/legend-pure-runtime/legend-pure-runtime-java-engine-compiled:legend-pure-runtime-java-engine-compiled",
+        "@maven//:com_fasterxml_jackson_core_jackson_annotations",
+        "@maven//:com_fasterxml_jackson_core_jackson_core",
+        "@maven//:com_fasterxml_jackson_core_jackson_databind",
+        "@maven//:org_eclipse_collections_eclipse_collections",
+        "@maven//:org_eclipse_collections_eclipse_collections_api",
+        "@maven//:org_mongodb_bson",
+        "@maven//:org_slf4j_slf4j_api",
+    ],
+    visibility = ["//visibility:public"],
+)

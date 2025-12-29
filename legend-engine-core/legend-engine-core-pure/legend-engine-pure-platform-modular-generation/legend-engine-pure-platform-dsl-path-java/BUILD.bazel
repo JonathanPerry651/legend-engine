@@ -1,0 +1,63 @@
+load("@rules_java//java:defs.bzl", "java_binary", "java_library")
+
+java_binary(
+    name = "Generator",
+    main_class = "org.finos.legend.pure.runtime.java.compiled.generation.orchestrator.JavaCodeGeneration",
+    runtime_deps = [
+        "//legend-pure/legend-pure-runtime/legend-pure-runtime-java-engine-compiled:legend-pure-runtime-java-engine-compiled",
+        "//legend-pure/legend-pure-core/legend-pure-m3-core:legend-pure-m3-core",
+        "//legend-pure/legend-pure-core/legend-pure-m4:legend-pure-m4",
+        "//legend-pure/legend-pure-dsl/legend-pure-dsl-path/legend-pure-m2-dsl-path-pure",
+        "//legend-pure/legend-pure-dsl/legend-pure-dsl-path/legend-pure-m2-dsl-path-grammar",
+        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-platform-modular-generation/legend-engine-pure-platform-java",
+        "@maven//:org_eclipse_collections_eclipse_collections",
+        "@maven//:org_eclipse_collections_eclipse_collections_api",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+genrule(
+    name = "generate_sources",
+    outs = ["platform_dsl_path_java_src.srcjar"],
+    cmd = """
+        mkdir -p work_dir/classes
+        mkdir -p work_dir/target
+
+        $(location :Generator) \
+            platform_dsl_path \
+            work_dir/classes \
+            work_dir/target
+
+        if [ -d work_dir/target/generated-sources ]; then
+             cd work_dir/target/generated-sources
+             zip -q -r ../../../$(location platform_dsl_path_java_src.srcjar) .
+             cd ../../..
+        elif [ -d work_dir/target/generated-test-sources ]; then
+             cd work_dir/target/generated-test-sources
+             zip -q -r ../../../$(location platform_dsl_path_java_src.srcjar) .
+             cd ../../..
+        else
+             echo "No sources generated"
+             ls -R work_dir
+             exit 1
+        fi
+    """,
+    tools = [":Generator"],
+    visibility = ["//visibility:public"],
+)
+
+java_library(
+    name = "legend-engine-pure-platform-dsl-path-java",
+    srcs = [":platform_dsl_path_java_src.srcjar"],
+    deps = [
+        "//legend-pure/legend-pure-runtime/legend-pure-runtime-java-engine-compiled:legend-pure-runtime-java-engine-compiled",
+        "//legend-pure/legend-pure-core/legend-pure-m3-core:legend-pure-m3-core",
+        "//legend-pure/legend-pure-core/legend-pure-m4:legend-pure-m4",
+        "//legend-pure/legend-pure-dsl/legend-pure-dsl-path/legend-pure-m2-dsl-path-pure",
+        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-platform-modular-generation/legend-engine-pure-platform-java",
+        "@maven//:org_eclipse_collections_eclipse_collections",
+        "@maven//:org_eclipse_collections_eclipse_collections_api",
+    ],
+    javacopts = ["-Xep:IdentityBinaryExpression:OFF", "-Xep:ComparableType:OFF", "-Xep:IsInstanceIncompatibleType:OFF"],
+    visibility = ["//visibility:public"],
+)

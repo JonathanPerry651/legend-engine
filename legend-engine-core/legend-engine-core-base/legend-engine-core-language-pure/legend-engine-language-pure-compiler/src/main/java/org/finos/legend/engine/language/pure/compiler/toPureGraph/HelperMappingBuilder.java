@@ -103,6 +103,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.finos.legend.pure.generated.platform_dsl_mapping_functions_Mapping.Root_meta_pure_mapping__allClassMappingsRecursive_Mapping_1__SetImplementation_MANY_;
+import org.finos.legend.pure.generated.Root_meta_pure_mapping_Mapping;
+import org.finos.legend.pure.generated.Root_meta_pure_mapping_SetImplementation;
 
 public class HelperMappingBuilder
 {
@@ -681,7 +683,7 @@ public class HelperMappingBuilder
     static ImmutableList<String> getUniqueMapStorePathsFromMapping(Mapping mapping, CompileContext context)
     {
         MutableSet<String> mappedStores = Sets.mutable.empty();
-        ListIterate.forEach(Root_meta_pure_mapping__allClassMappingsRecursive_Mapping_1__SetImplementation_MANY_(mapping, context.pureModel.getExecutionSupport()).toList(), setImplementation ->
+        ListIterate.forEach(Root_meta_pure_mapping__allClassMappingsRecursive_Mapping_1__SetImplementation_MANY_((Root_meta_pure_mapping_Mapping) mapping, context.pureModel.getExecutionSupport()).toList(), setImplementation ->
         {
             context.getCompilerExtensions().getExtraSetImplementationSourceScanners().forEach(scanner -> scanner.value(setImplementation, mappedStores, context));
         });

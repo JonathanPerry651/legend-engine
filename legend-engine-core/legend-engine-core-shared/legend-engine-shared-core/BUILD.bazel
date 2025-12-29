@@ -1,0 +1,30 @@
+load("@rules_java//java:defs.bzl", "java_library")
+
+java_library(
+    name = "legend-engine-shared-core",
+    srcs = glob(["src/main/java/**/*.java"]),
+    resources = glob(["src/main/resources/**/*"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//legend-engine/legend-engine-core/legend-engine-core-shared/legend-engine-shared-extensions",
+        "//legend-engine/legend-engine-core/legend-engine-core-base/legend-engine-core-language-pure/legend-engine-protocol",
+        "//legend-engine/legend-engine-core/legend-engine-core-base/legend-engine-core-language-pure/legend-engine-protocol-pure:protocol-pure-v1",
+        "//legend-engine/legend-engine-core/legend-engine-core-identity/legend-engine-identity-core",
+        "//legend-engine/legend-engine-xts-identity/legend-engine-xt-identity-pac4j",
+        "@maven//:com_fasterxml_jackson_core_jackson_databind",
+        "@maven//:com_fasterxml_jackson_core_jackson_annotations",
+        "@maven//:com_fasterxml_jackson_core_jackson_core",
+        "@maven//:javax_ws_rs_javax_ws_rs_api",
+        "@maven//:org_apache_commons_commons_lang3",
+        "@maven//:org_slf4j_slf4j_api",
+        "@maven//:io_opentracing_opentracing_api",
+        "@maven//:io_opentracing_opentracing_util",
+        "@maven//:io_zipkin_reporter2_zipkin_reporter",
+        "@maven//:io_prometheus_simpleclient",
+        "@maven//:org_apache_httpcomponents_httpclient",
+        "@maven//:org_apache_httpcomponents_httpcore",
+        "@maven//:org_pac4j_pac4j_core",
+        "@maven//:org_eclipse_collections_eclipse_collections_api",
+        "@maven//:org_eclipse_collections_eclipse_collections",
+    ],
+)

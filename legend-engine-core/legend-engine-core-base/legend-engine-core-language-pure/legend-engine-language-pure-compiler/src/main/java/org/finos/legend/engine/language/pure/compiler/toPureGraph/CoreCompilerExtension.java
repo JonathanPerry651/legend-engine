@@ -40,7 +40,7 @@ import org.finos.legend.pure.generated.Root_meta_pure_data_EmbeddedData;
 import org.finos.legend.pure.generated.Root_meta_pure_test_assertion_TestAssertion;
 import org.finos.legend.pure.m3.coreinstance.meta.external.store.model.PureInstanceSetImplementation;
 import org.finos.legend.pure.m3.coreinstance.meta.pure.mapping.SetImplementation;
-import org.finos.legend.pure.m3.coreinstance.meta.pure.store.Store;
+import org.finos.legend.pure.m3.coreinstance.meta.pure.metamodel.PackageableElement;
 
 import java.util.Collections;
 import java.util.List;
@@ -107,12 +107,12 @@ public class CoreCompilerExtension implements CompilerExtension, EmbeddedDataCom
     }
 
     @Override
-    public Map<PackageableElementType, Function2<StoreProviderPointer, CompileContext, Store>> getExtraStoreProviderHandlers()
+    public Map<PackageableElementType, Function2<StoreProviderPointer, CompileContext, PackageableElement>> getExtraStoreProviderHandlers()
     {
         return Maps.mutable.of(PackageableElementType.STORE, CoreCompilerExtension::resolveStore);
     }
 
-    private static Store resolveStore(StoreProviderPointer storeProviderPointer, CompileContext context)
+    private static PackageableElement resolveStore(StoreProviderPointer storeProviderPointer, CompileContext context)
     {
         return context.resolveStore(storeProviderPointer.path, storeProviderPointer.sourceInformation);
     }
@@ -124,13 +124,18 @@ public class CoreCompilerExtension implements CompilerExtension, EmbeddedDataCom
     }
 
     @Override
-    public List<Procedure3<SetImplementation, Set<String>, CompileContext>> getExtraSetImplementationSourceScanners()
+    public List<Procedure3<Object, Set<String>, CompileContext>> getExtraSetImplementationSourceScanners()
     {
         return Collections.singletonList((setImplementation, scannedSources, context) ->
         {
             if (setImplementation instanceof PureInstanceSetImplementation && ((PureInstanceSetImplementation) setImplementation)._srcClass() != null)
             {
                 scannedSources.add("ModelStore");
+            }
+            // Check for generated implementation
+            if (setImplementation instanceof org.finos.legend.pure.generated.Root_meta_external_store_model_PureInstanceSetImplementation && ((org.finos.legend.pure.generated.Root_meta_external_store_model_PureInstanceSetImplementation) setImplementation)._srcClass() != null)
+            {
+                 scannedSources.add("ModelStore");
             }
         });
     }

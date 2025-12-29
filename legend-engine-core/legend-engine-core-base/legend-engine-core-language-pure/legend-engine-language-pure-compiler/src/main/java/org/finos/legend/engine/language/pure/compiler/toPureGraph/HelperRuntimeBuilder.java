@@ -52,7 +52,7 @@ import org.finos.legend.pure.generated.Root_meta_external_store_model_XmlModelCo
 import org.finos.legend.pure.generated.Root_meta_pure_runtime_PackageableRuntime;
 import org.finos.legend.pure.m3.coreinstance.meta.pure.mapping.Mapping;
 import org.finos.legend.pure.m3.coreinstance.meta.pure.metamodel.PackageableElement;
-import org.finos.legend.pure.m3.coreinstance.meta.pure.store.Store;
+import org.finos.legend.pure.generated.Root_meta_pure_store_Store;
 import org.finos.legend.pure.m4.coreinstance.CoreInstance;
 
 import java.util.ArrayList;
@@ -68,12 +68,12 @@ import static org.finos.legend.pure.generated.platform_dsl_mapping_functions_Map
 
 public class HelperRuntimeBuilder
 {
-    public static Store getConnectionStore(Root_meta_core_runtime_ConnectionStore connectionStore)
+    public static Root_meta_pure_store_Store getConnectionStore(Root_meta_core_runtime_ConnectionStore connectionStore)
     {
         Object store = connectionStore._element();
-        if (store instanceof Store)
+        if (store instanceof Root_meta_pure_store_Store)
         {
-            return (Store) store;
+            return (Root_meta_pure_store_Store) store;
         }
         throw new IllegalStateException("Connection does not have a proper store");
     }
@@ -82,7 +82,7 @@ public class HelperRuntimeBuilder
     {
         Set<String> mappedStores = new HashSet<>();
         mappings.forEach(mapping ->
-                ListIterate.forEach(Root_meta_pure_mapping__allClassMappingsRecursive_Mapping_1__SetImplementation_MANY_(mapping, context.pureModel.getExecutionSupport()).toList(), setImplementation ->
+                ListIterate.forEach(Root_meta_pure_mapping__allClassMappingsRecursive_Mapping_1__SetImplementation_MANY_((org.finos.legend.pure.generated.Root_meta_pure_mapping_Mapping) mapping, context.pureModel.getExecutionSupport()).toList(), setImplementation ->
                 {
                     context.getCompilerExtensions().getExtraSetImplementationSourceScanners().forEach(scanner -> scanner.value(setImplementation, mappedStores, context));
                 }));
@@ -94,7 +94,7 @@ public class HelperRuntimeBuilder
         Set<String> mappedStores = getAllMapStorePathsFromMappings(mappings, context);
         ListIterate.forEach(pureRuntime._connectionStores().toList(), connectionStore ->
         {
-            Store store = getConnectionStore(connectionStore);
+            Root_meta_pure_store_Store store = getConnectionStore(connectionStore);
             // TODO Identify binding store as ModelStore better than this
             if (store instanceof Root_meta_external_format_shared_binding_Binding)
             {
@@ -161,7 +161,7 @@ public class HelperRuntimeBuilder
                         new Root_meta_core_runtime_ConnectionStore_Impl("")
                                 ._connection(pureConnection)
                                 ._element(getStore(storePointer, context));
-                pureRuntime._connectionStoresAdd(connectionStore);
+                pureRuntime._connectionStoresAdd((Root_meta_core_runtime_ConnectionStore) connectionStore);
             });
         });
         ListIterate.forEach(engineRuntime.connections.stream().filter(c -> c.store.path.equals("ModelStore") || !(context.resolvePackageableElement(c.store.path, c.store.sourceInformation) instanceof Root_meta_external_format_shared_binding_Binding)).collect(Collectors.toList()), storeConnections ->
@@ -191,19 +191,19 @@ public class HelperRuntimeBuilder
                         new Root_meta_core_runtime_ConnectionStore_Impl("", SourceInformationHelper.toM3SourceInformation(identifiedConnection.sourceInformation), context.pureModel.getClass("meta::core::runtime::ConnectionStore"))
                                 ._connection(pureConnection)
                                 ._element(getStore(storeConnections.store.path, storeConnections.store.sourceInformation, context));
-                pureRuntime._connectionStoresAdd(connectionStore);
+                pureRuntime._connectionStoresAdd((Root_meta_core_runtime_ConnectionStore) connectionStore);
             });
         });
         pureRuntime._connectionStores().forEach(connectionStore ->
         {
-            Store store = (Store) connectionStore._element();
+            Root_meta_pure_store_Store store = (Root_meta_pure_store_Store) connectionStore._element();
             RichIterable<? extends Root_meta_core_runtime_ConnectionStore> potentialDupes =
-                    pureRuntime._connectionStores().select(c -> c._element().equals(store));
+                    ((Root_meta_core_runtime_Runtime) pureRuntime)._connectionStores().select(c -> c._element().equals(store));
             if (potentialDupes.size() > 1 && !(store instanceof Root_meta_external_store_model_ModelStore))
             {
                 throw new EngineException("Found " + potentialDupes.size() + " connections against store [" + store._name() + "] under a single runtime.", engineRuntime.sourceInformation, EngineErrorType.COMPILATION);
             }
-            Root_meta_core_runtime_Connection pureConnection = connectionStore._connection();
+            Root_meta_core_runtime_Connection pureConnection = ((Root_meta_core_runtime_ConnectionStore) connectionStore)._connection();
             if (pureConnection instanceof Root_meta_external_store_model_JsonModelConnection || pureConnection instanceof Root_meta_external_store_model_XmlModelConnection)
             {
                 if (visitedSourceClasses.contains(pureConnection.getValueForMetaPropertyToOne("class")) && visitedStores.contains(HelperModelBuilder.getElementFullPath((PackageableElement) connectionStore._element(),context.pureModel.getExecutionSupport())))
@@ -238,7 +238,7 @@ public class HelperRuntimeBuilder
         });
         context.getCompilerExtensions().getExtraRuntimeThirdPassProcessors().forEach(processor -> processor.value(engineRuntime, pureRuntime, context));
         // verify runtime mapping coverage
-        checkRuntimeMappingCoverage(pureRuntime, mappings, context, engineRuntime.sourceInformation);
+        checkRuntimeMappingCoverage((Root_meta_core_runtime_Runtime) pureRuntime, mappings, context, engineRuntime.sourceInformation);
         return pureRuntime;
     }
 
@@ -296,7 +296,7 @@ public class HelperRuntimeBuilder
         }
         if (runtime instanceof EngineRuntime)
         {
-            return buildEngineRuntime(((EngineRuntime) runtime), context);
+            return buildEngineRuntime(((org.finos.legend.engine.protocol.pure.v1.model.packageableElement.runtime.EngineRuntime) runtime), context);
         }
         else if (runtime instanceof RuntimePointer)
         {
@@ -322,13 +322,13 @@ public class HelperRuntimeBuilder
         }
     }
 
-    public static Store getStore(String element, SourceInformation sourceInformation, CompileContext context)
+    public static PackageableElement getStore(String element, SourceInformation sourceInformation, CompileContext context)
     {
         StoreProviderPointer s = new StoreProviderPointer(PackageableElementType.STORE, element, sourceInformation);
         return getStore(s, context);
     }
 
-    public static Store getStore(StoreProviderPointer storeProviderPointer, CompileContext context)
+    public static PackageableElement getStore(StoreProviderPointer storeProviderPointer, CompileContext context)
     {
         return StoreProviderCompilerHelper.getStoreFromPackageableElementPointer(storeProviderPointer, context);
     }

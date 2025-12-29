@@ -1,0 +1,13 @@
+load("@rules_java//java:defs.bzl", "java_library")
+
+java_library(
+    name = "legend-engine-xt-javaGeneration-conventions-standard-pure",
+    srcs = glob(["src/main/java/**/*.java"]),
+    resources = glob(["src/main/resources/**/*"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//legend-engine/legend-engine-xts-java/legend-engine-xt-javaGeneration-conventions-essential-pure",
+        "//legend-pure/legend-pure-core/legend-pure-m3-core:legend-pure-m3-core",
+        "//legend-pure/legend-pure-core/legend-pure-m4:legend-pure-m4",
+    ],
+)

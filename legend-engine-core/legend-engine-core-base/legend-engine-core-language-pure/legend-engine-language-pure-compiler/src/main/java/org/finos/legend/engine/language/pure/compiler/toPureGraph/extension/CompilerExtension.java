@@ -210,7 +210,7 @@ public interface CompilerExtension extends LegendLanguageExtension
         return Collections.emptyList();
     }
 
-    default List<Procedure3<SetImplementation, Set<String>, CompileContext>> getExtraSetImplementationSourceScanners()
+    default List<Procedure3<Object, Set<String>, CompileContext>> getExtraSetImplementationSourceScanners()
     {
         return Collections.emptyList();
     }
