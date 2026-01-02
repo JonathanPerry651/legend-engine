@@ -8,8 +8,8 @@ java_library(
         "//legend-engine/legend-engine-core/legend-engine-core-identity/legend-engine-identity-core",
         "//legend-engine/legend-engine-xts-identity/legend-engine-xt-identity-kerberos",
         "//legend-shared/legend-shared-pac4j-kerberos",
-        "@maven//:org_eclipse_collections_eclipse_collections",
-        "@maven//:org_eclipse_collections_eclipse_collections_api",
-        "@maven//:org_pac4j_pac4j_core",
+        "@legend_maven//:org_eclipse_collections_eclipse_collections",
+        "@legend_maven//:org_eclipse_collections_eclipse_collections_api",
+        "@legend_maven//:org_pac4j_pac4j_core",
     ],
 )

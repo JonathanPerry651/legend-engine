@@ -6,7 +6,7 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//legend-engine/legend-engine-core/legend-engine-core-shared/legend-engine-shared-structures",
-        "@maven//:org_eclipse_collections_eclipse_collections",
-        "@maven//:org_eclipse_collections_eclipse_collections_api",
+        "@legend_maven//:org_eclipse_collections_eclipse_collections",
+        "@legend_maven//:org_eclipse_collections_eclipse_collections_api",
     ],
 )

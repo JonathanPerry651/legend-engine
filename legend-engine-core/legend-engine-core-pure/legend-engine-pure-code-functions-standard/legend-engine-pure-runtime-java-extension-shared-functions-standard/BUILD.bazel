@@ -7,8 +7,8 @@ java_library(
         "//legend-pure/legend-pure-core/legend-pure-m3-core:legend-pure-m3-core",
         "//legend-pure/legend-pure-core/legend-pure-m4:legend-pure-m4",
         "//legend-pure/legend-pure-runtime/legend-pure-runtime-java-engine-shared",
-        "@maven//:org_eclipse_collections_eclipse_collections",
-        "@maven//:org_eclipse_collections_eclipse_collections_api",
+        "@legend_maven//:org_eclipse_collections_eclipse_collections",
+        "@legend_maven//:org_eclipse_collections_eclipse_collections_api",
     ],
     visibility = ["//visibility:public"],
 )

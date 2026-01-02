@@ -25,42 +25,26 @@ java_binary(
         "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-json/legend-engine-pure-runtime-java-extension-compiled-functions-json",
         "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-standard/legend-engine-pure-runtime-java-extension-compiled-functions-standard",
         "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-standard/legend-engine-pure-runtime-java-extension-shared-functions-standard",
-        "@maven//:org_eclipse_collections_eclipse_collections",
-        "@maven//:org_eclipse_collections_eclipse_collections_api",
-        "@maven//:com_googlecode_json_simple_json_simple",
+        "@legend_maven//:org_eclipse_collections_eclipse_collections",
+        "@legend_maven//:org_eclipse_collections_eclipse_collections_api",
+        "@legend_maven//:com_googlecode_json_simple_json_simple",
         ":resources",
     ],
     visibility = ["//visibility:public"],
 )
 
-genrule(
-    name = "generate_sources",
-    outs = ["core_external_language_java_src.srcjar"],
-    cmd = """
-        mkdir -p work_dir/classes
-        mkdir -p work_dir/target
+load("//tools/build_rules:pure_compiled.bzl", "pure_sources")
 
-        $(location :Generator) \
-            core_external_language_java \
-            work_dir/classes \
-            work_dir/target
-
-        if [ -d work_dir/target/generated-sources ]; then
-             cd work_dir/target/generated-sources
-             zip -q -r ../../../$(location core_external_language_java_src.srcjar) .
-             cd ../../..
-        else
-             echo "No sources generated"
-             exit 1
-        fi
-    """,
-    tools = [":Generator"],
+pure_sources(
+    name = "core_external_language_java_src",
+    repository = "core_external_language_java",
+    generator = ":Generator",
     visibility = ["//visibility:public"],
 )
 
 java_library(
     name = "legend-engine-xt-javaGeneration-pure",
-    srcs = glob(["src/main/java/**/*.java"]) + [":core_external_language_java_src.srcjar"],
+    srcs = glob(["src/main/java/**/*.java"]) + [":core_external_language_java_src"],
     deps = [
         ":resources",
         "//legend-pure/legend-pure-runtime/legend-pure-runtime-java-engine-compiled:legend-pure-runtime-java-engine-compiled",
@@ -74,9 +58,9 @@ java_library(
         "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-json/legend-engine-pure-runtime-java-extension-compiled-functions-json",
         "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-standard/legend-engine-pure-runtime-java-extension-compiled-functions-standard",
         "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-standard/legend-engine-pure-runtime-java-extension-shared-functions-standard",
-        "@maven//:org_eclipse_collections_eclipse_collections",
-        "@maven//:org_eclipse_collections_eclipse_collections_api",
-        "@maven//:com_googlecode_json_simple_json_simple",
+        "@legend_maven//:org_eclipse_collections_eclipse_collections",
+        "@legend_maven//:org_eclipse_collections_eclipse_collections_api",
+        "@legend_maven//:com_googlecode_json_simple_json_simple",
     ],
     visibility = ["//visibility:public"],
 )
