@@ -12,27 +12,12 @@ java_binary(
     visibility = ["//visibility:public"],
 )
 
-genrule(
-    name = "generate_sources",
-    srcs = ["src/main/resources/m3.protocol.json"],
-    outs = ["protocol_pure_src.srcjar"],
-    cmd = """
-        mkdir -p work_dir/generated-sources
+load("//tools/build_rules:pure_generation.bzl", "pure_protocol_generation")
 
-        $(location :Generator) \
-            $(location src/main/resources/m3.protocol.json) \
-            work_dir/generated-sources
-
-        if [ -d work_dir/generated-sources ]; then
-             cd work_dir/generated-sources
-             zip -q -r ../../$(location protocol_pure_src.srcjar) .
-             cd ../../..
-        else
-             echo "No sources generated"
-             exit 1
-        fi
-    """,
-    tools = [":Generator"],
+pure_protocol_generation(
+    name = "protocol_pure_src",
+    src = "src/main/resources/m3.protocol.json",
+    tool = ":Generator",
     visibility = ["//visibility:public"],
 )
 
