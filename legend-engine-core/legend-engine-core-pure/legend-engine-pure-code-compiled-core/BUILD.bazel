@@ -66,7 +66,7 @@ partitioned_java_library(
     name = "legend-engine-pure-code-compiled-core",
     src = ":core_src",
     layers = 40,
-    shards = 32,
+    shards = 8,
     visibility = ["//visibility:public"],
     javacopts = [
         "-Xep:ComparableType:OFF",
