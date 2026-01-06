@@ -3,13 +3,13 @@ load("@rules_java//java:defs.bzl", "java_library")
 java_library(
     name = "legend-engine-pure-runtime-java-extension-shared-functions-unclassified",
     srcs = glob(["src/main/java/**/*.java"]),
+    visibility = ["//visibility:public"],
     deps = [
-        "//legend-pure/legend-pure-core/legend-pure-m3-core:legend-pure-m3-core",
-        "//legend-pure/legend-pure-core/legend-pure-m4:legend-pure-m4",
+        "//legend-pure/legend-pure-core/legend-pure-m3-core",
+        "//legend-pure/legend-pure-core/legend-pure-m4",
+        "@legend_maven//:commons_codec_commons_codec",
+        "@legend_maven//:org_bouncycastle_bcprov_jdk15on",
         "@legend_maven//:org_eclipse_collections_eclipse_collections",
         "@legend_maven//:org_eclipse_collections_eclipse_collections_api",
-        "@legend_maven//:org_bouncycastle_bcprov_jdk15on",
-        "@legend_maven//:commons_codec_commons_codec",
     ],
-    visibility = ["//visibility:public"],
 )

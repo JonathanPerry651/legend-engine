@@ -3,14 +3,14 @@ load("@rules_java//java:defs.bzl", "java_library")
 java_library(
     name = "legend-engine-protocol-generation",
     srcs = glob(["src/main/java/**/*.java"]),
-    deps = [
-        "//legend-pure/legend-pure-runtime/legend-pure-runtime-java-engine-compiled:legend-pure-runtime-java-engine-compiled",
-        "//legend-engine/legend-engine-xts-protocol-java-generation/legend-engine-protocol-generation-pure",
-        "//legend-engine/legend-engine-xts-java/legend-engine-xt-javaGeneration-pure",
-        "//legend-engine/legend-engine-xts-java/legend-engine-external-language-java",
-        "@legend_maven//:commons_io_commons_io",
-        "@legend_maven//:org_eclipse_collections_eclipse_collections_api",
-        "@legend_maven//:org_eclipse_collections_eclipse_collections",
-    ],
     visibility = ["//visibility:public"],
+    deps = [
+        "//legend-engine/legend-engine-xts-java/legend-engine-external-language-java",
+        "//legend-engine/legend-engine-xts-java/legend-engine-xt-javaGeneration-pure",
+        "//legend-engine/legend-engine-xts-protocol-java-generation/legend-engine-protocol-generation-pure",
+        "//legend-pure/legend-pure-runtime/legend-pure-runtime-java-engine-compiled",
+        "@legend_maven//:commons_io_commons_io",
+        "@legend_maven//:org_eclipse_collections_eclipse_collections",
+        "@legend_maven//:org_eclipse_collections_eclipse_collections_api",
+    ],
 )

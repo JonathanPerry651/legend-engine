@@ -1,4 +1,5 @@
 load("@rules_java//java:defs.bzl", "java_binary", "java_library")
+load("//tools/build_rules:pure_compiled.bzl", "pure_sources")
 
 java_library(
     name = "resources",
@@ -9,49 +10,49 @@ java_library(
 java_binary(
     name = "Generator",
     main_class = "org.finos.legend.pure.runtime.java.compiled.generation.orchestrator.JavaCodeGeneration",
+    visibility = ["//visibility:public"],
     runtime_deps = [
-        "//legend-pure/legend-pure-runtime/legend-pure-runtime-java-engine-compiled:legend-pure-runtime-java-engine-compiled",
-        "//legend-pure/legend-pure-core/legend-pure-m3-core:legend-pure-m3-core",
-        "//legend-pure/legend-pure-core/legend-pure-m4:legend-pure-m4",
-        "//legend-pure/legend-pure-dsl/legend-pure-dsl-diagram/legend-pure-m2-dsl-diagram-grammar",
-        "//legend-pure/legend-pure-dsl/legend-pure-dsl-store/legend-pure-m2-dsl-store-grammar",
+        ":resources",
         "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-compiled-core",
-        "//legend-engine/legend-engine-xts-java/legend-engine-xt-javaGeneration-pure",
         "//legend-engine/legend-engine-xts-java/legend-engine-xt-javaGeneration-conventions-essential-pure",
         "//legend-engine/legend-engine-xts-java/legend-engine-xt-javaGeneration-conventions-standard-pure",
-        ":resources",
+        "//legend-engine/legend-engine-xts-java/legend-engine-xt-javaGeneration-pure",
+        "//legend-pure/legend-pure-core/legend-pure-m3-core",
+        "//legend-pure/legend-pure-core/legend-pure-m4",
+        "//legend-pure/legend-pure-dsl/legend-pure-dsl-diagram/legend-pure-m2-dsl-diagram-grammar",
+        "//legend-pure/legend-pure-dsl/legend-pure-dsl-store/legend-pure-m2-dsl-store-grammar",
+        "//legend-pure/legend-pure-runtime/legend-pure-runtime-java-engine-compiled",
+        "@legend_maven//:com_googlecode_json_simple_json_simple",
         "@legend_maven//:org_eclipse_collections_eclipse_collections",
         "@legend_maven//:org_eclipse_collections_eclipse_collections_api",
-        "@legend_maven//:com_googlecode_json_simple_json_simple",
     ],
-    visibility = ["//visibility:public"],
 )
-
-load("//tools/build_rules:pure_compiled.bzl", "pure_sources")
 
 pure_sources(
     name = "core_protocol_generation_src",
-    repository = "core_protocol_generation",
     generator = ":Generator",
+    repository = "core_protocol_generation",
     visibility = ["//visibility:public"],
 )
 
-java_library(
+load("//tools/build_rules:java_validation.bzl", "validated_java_library")
+
+validated_java_library(
     name = "legend-engine-protocol-generation-pure",
     srcs = glob(["src/main/java/**/*.java"]) + [":core_protocol_generation_src"],
+    visibility = ["//visibility:public"],
     deps = [
         ":resources",
-        "//legend-pure/legend-pure-runtime/legend-pure-runtime-java-engine-compiled:legend-pure-runtime-java-engine-compiled",
-        "//legend-pure/legend-pure-core/legend-pure-m3-core:legend-pure-m3-core",
-        "//legend-pure/legend-pure-core/legend-pure-m4:legend-pure-m4",
         "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-compiled-core",
-        "//legend-engine/legend-engine-xts-java/legend-engine-xt-javaGeneration-pure",
         "//legend-engine/legend-engine-xts-java/legend-engine-xt-javaGeneration-conventions-essential-pure",
         "//legend-engine/legend-engine-xts-java/legend-engine-xt-javaGeneration-conventions-standard-pure",
+        "//legend-engine/legend-engine-xts-java/legend-engine-xt-javaGeneration-pure",
+        "//legend-pure/legend-pure-core/legend-pure-m3-core",
+        "//legend-pure/legend-pure-core/legend-pure-m4",
         "//legend-pure/legend-pure-dsl/legend-pure-dsl-store/legend-pure-runtime-java-extension-compiled-dsl-store",
+        "//legend-pure/legend-pure-runtime/legend-pure-runtime-java-engine-compiled",
+        "@legend_maven//:com_googlecode_json_simple_json_simple",
         "@legend_maven//:org_eclipse_collections_eclipse_collections",
         "@legend_maven//:org_eclipse_collections_eclipse_collections_api",
-        "@legend_maven//:com_googlecode_json_simple_json_simple",
     ],
-    visibility = ["//visibility:public"],
 )

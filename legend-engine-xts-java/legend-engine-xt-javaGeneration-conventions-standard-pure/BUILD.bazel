@@ -7,7 +7,7 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//legend-engine/legend-engine-xts-java/legend-engine-xt-javaGeneration-conventions-essential-pure",
-        "//legend-pure/legend-pure-core/legend-pure-m3-core:legend-pure-m3-core",
-        "//legend-pure/legend-pure-core/legend-pure-m4:legend-pure-m4",
+        "//legend-pure/legend-pure-core/legend-pure-m3-core",
+        "//legend-pure/legend-pure-core/legend-pure-m4",
     ],
 )

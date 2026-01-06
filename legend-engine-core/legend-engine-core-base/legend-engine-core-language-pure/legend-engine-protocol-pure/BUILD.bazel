@@ -1,18 +1,17 @@
 load("@rules_java//java:defs.bzl", "java_binary", "java_library")
+load("//tools/build_rules:pure_generation.bzl", "pure_protocol_generation")
 
 java_binary(
     name = "Generator",
     main_class = "org.finos.legend.engine.protocol.generation.GenerateMetaClasses",
+    visibility = ["//visibility:public"],
     runtime_deps = [
         "//legend-engine/legend-engine-xts-protocol-java-generation/legend-engine-protocol-generation",
-        "//legend-pure/legend-pure-dsl/legend-pure-dsl-mapping/legend-pure-runtime-java-extension-compiled-dsl-mapping",
         "//legend-pure/legend-pure-dsl/legend-pure-dsl-mapping/legend-pure-m2-dsl-mapping-pure",
+        "//legend-pure/legend-pure-dsl/legend-pure-dsl-mapping/legend-pure-runtime-java-extension-compiled-dsl-mapping",
         "//legend-pure/legend-pure-dsl/legend-pure-dsl-path/legend-pure-m2-dsl-path-grammar",
     ],
-    visibility = ["//visibility:public"],
 )
-
-load("//tools/build_rules:pure_generation.bzl", "pure_protocol_generation")
 
 pure_protocol_generation(
     name = "protocol_pure_src",
@@ -25,6 +24,7 @@ java_library(
     name = "legend-engine-protocol-pure",
     srcs = [":protocol_pure_src.srcjar"],
     resources = glob(["src/main/resources/**/*"]),
+    visibility = ["//visibility:public"],
     deps = [
         "//legend-engine/legend-engine-core/legend-engine-core-base/legend-engine-core-language-pure/legend-engine-protocol",
         "//legend-engine/legend-engine-core/legend-engine-core-shared/legend-engine-shared-extensions",
@@ -36,17 +36,19 @@ java_library(
         "@legend_maven//:org_mongodb_bson",
         "@legend_maven//:org_slf4j_slf4j_api",
     ],
-    visibility = ["//visibility:public"],
 )
 
-java_library(
+load("//tools/build_rules:java_validation.bzl", "validated_java_library")
+
+validated_java_library(
     name = "protocol-pure-v1",
     srcs = glob(["src/main/java/**/*.java"]),
     resources = glob(["src/main/resources/**/*"]),
+    visibility = ["//visibility:public"],
     deps = [
         "//legend-engine/legend-engine-core/legend-engine-core-base/legend-engine-core-language-pure/legend-engine-protocol",
         "//legend-engine/legend-engine-core/legend-engine-core-shared/legend-engine-shared-extensions",
-        "//legend-pure/legend-pure-runtime/legend-pure-runtime-java-engine-compiled:legend-pure-runtime-java-engine-compiled",
+        "//legend-pure/legend-pure-runtime/legend-pure-runtime-java-engine-compiled",
         "@legend_maven//:com_fasterxml_jackson_core_jackson_annotations",
         "@legend_maven//:com_fasterxml_jackson_core_jackson_core",
         "@legend_maven//:com_fasterxml_jackson_core_jackson_databind",
@@ -55,5 +57,4 @@ java_library(
         "@legend_maven//:org_mongodb_bson",
         "@legend_maven//:org_slf4j_slf4j_api",
     ],
-    visibility = ["//visibility:public"],
 )

@@ -7,7 +7,7 @@ java_library(
     deps = [
         "//legend-engine/legend-engine-core/legend-engine-core-shared/legend-engine-shared-extensions",
         "@legend_maven//:com_fasterxml_jackson_core_jackson_annotations",
-        "@legend_maven//:org_eclipse_collections_eclipse_collections_api",
         "@legend_maven//:org_eclipse_collections_eclipse_collections",
+        "@legend_maven//:org_eclipse_collections_eclipse_collections_api",
     ],
 )

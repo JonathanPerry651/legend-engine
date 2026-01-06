@@ -1,19 +1,18 @@
-
 load("@rules_java//java:defs.bzl", "java_library")
 
 java_library(
     name = "legend-engine-pure-runtime-java-extension-shared-functions-json",
     srcs = glob(["src/main/java/**/*.java"]),
+    visibility = ["//visibility:public"],
     deps = [
-        "//legend-pure/legend-pure-runtime/legend-pure-runtime-java-engine-compiled:legend-pure-runtime-java-engine-compiled",
-        "//legend-pure/legend-pure-core/legend-pure-m3-core:legend-pure-m3-core",
-        "//legend-pure/legend-pure-core/legend-pure-m4:legend-pure-m4",
         "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-json/legend-engine-pure-runtime-java-extension-shared-functions-conversion",
         "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-unclassified/legend-engine-pure-runtime-java-extension-shared-functions-unclassified",
-        "@legend_maven//:org_eclipse_collections_eclipse_collections",
-        "@legend_maven//:org_eclipse_collections_eclipse_collections_api",
+        "//legend-pure/legend-pure-core/legend-pure-m3-core",
+        "//legend-pure/legend-pure-core/legend-pure-m4",
+        "//legend-pure/legend-pure-runtime/legend-pure-runtime-java-engine-compiled",
         "@legend_maven//:com_googlecode_json_simple_json_simple",
         "@legend_maven//:commons_codec_commons_codec",
+        "@legend_maven//:org_eclipse_collections_eclipse_collections",
+        "@legend_maven//:org_eclipse_collections_eclipse_collections_api",
     ],
-    visibility = ["//visibility:public"],
 )

@@ -3,14 +3,14 @@ load("@rules_java//java:defs.bzl", "java_library")
 java_library(
     name = "legend-engine-pure-runtime-java-extension-shared-functions-relation",
     srcs = glob(["src/main/java/**/*.java"]),
+    visibility = ["//visibility:public"],
     deps = [
-        "//legend-pure/legend-pure-core/legend-pure-m3-core:legend-pure-m3-core",
-        "//legend-pure/legend-pure-core/legend-pure-m4:legend-pure-m4",
-        "//legend-pure/legend-pure-runtime/legend-pure-runtime-java-engine-shared",
         "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-variant/legend-engine-pure-runtime-java-extension-shared-functions-variant",
+        "//legend-pure/legend-pure-core/legend-pure-m3-core",
+        "//legend-pure/legend-pure-core/legend-pure-m4",
+        "//legend-pure/legend-pure-runtime/legend-pure-runtime-java-engine-shared",
+        "@legend_maven//:io_deephaven_deephaven_csv",
         "@legend_maven//:org_eclipse_collections_eclipse_collections",
         "@legend_maven//:org_eclipse_collections_eclipse_collections_api",
-        "@legend_maven//:io_deephaven_deephaven_csv",
     ],
-    visibility = ["//visibility:public"],
 )

@@ -1,4 +1,3 @@
-
 java_library(
     name = "legend-engine-protocol",
     srcs = [

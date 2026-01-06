@@ -3,11 +3,11 @@ load("@rules_java//java:defs.bzl", "java_library")
 java_library(
     name = "legend-engine-xt-identity-kerberos",
     srcs = glob(["src/main/java/**/*.java"]),
+    javacopts = ["-Xep:SelfAssignment:OFF"],
     visibility = ["//visibility:public"],
     deps = [
         "//legend-engine/legend-engine-core/legend-engine-core-identity/legend-engine-identity-core",
         "@legend_maven//:org_eclipse_collections_eclipse_collections",
         "@legend_maven//:org_eclipse_collections_eclipse_collections_api",
     ],
-    javacopts = ["-Xep:SelfAssignment:OFF"],
 )
