@@ -52,9 +52,18 @@ public class GenerationArgument
 
     private static String readConfigFile(String file) throws Exception
     {
-        try (InputStream inputStream = Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResourceAsStream(file), () -> '\'' + file + "' not found on classpath"))
+        InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(file);
+        if (inputStream == null)
         {
-            return IOUtils.toString(inputStream, StandardCharsets.UTF_8);
+            java.nio.file.Path path = java.nio.file.Paths.get(file);
+            if (java.nio.file.Files.exists(path))
+            {
+                 inputStream = java.nio.file.Files.newInputStream(path);
+            }
+        }
+        try (InputStream stream = Objects.requireNonNull(inputStream, () -> '\'' + file + "' not found on classpath or filesystem"))
+        {
+            return IOUtils.toString(stream, StandardCharsets.UTF_8);
         }
     }
 

@@ -4,12 +4,31 @@ load("//tools/build_rules:pure_generation.bzl", "pure_protocol_generation")
 java_binary(
     name = "Generator",
     main_class = "org.finos.legend.engine.protocol.generation.GenerateMetaClasses",
+    jvm_flags = ["-Xmx4G"],
+    resources = glob(["src/main/resources/**/*"]),
     visibility = ["//visibility:public"],
     runtime_deps = [
         "//legend-engine/legend-engine-xts-protocol-java-generation/legend-engine-protocol-generation",
+        "//legend-pure/legend-pure-core/legend-pure-m3-core",
+        "//legend-pure/legend-pure-core/legend-pure-m3-core:platform_compiled_graph_import",
         "//legend-pure/legend-pure-dsl/legend-pure-dsl-mapping/legend-pure-m2-dsl-mapping-pure",
         "//legend-pure/legend-pure-dsl/legend-pure-dsl-mapping/legend-pure-runtime-java-extension-compiled-dsl-mapping",
-        "//legend-pure/legend-pure-dsl/legend-pure-dsl-path/legend-pure-m2-dsl-path-grammar",
+        "//legend-pure/legend-pure-dsl/legend-pure-dsl-graph/legend-pure-m2-dsl-graph-pure:platform_dsl_graph_compiled_graph_import",
+        "//legend-pure/legend-pure-dsl/legend-pure-dsl-store/legend-pure-m2-dsl-store-pure:platform_dsl_store_compiled_graph_import",
+        "//legend-pure/legend-pure-dsl/legend-pure-dsl-mapping/legend-pure-m2-dsl-mapping-pure:platform_dsl_mapping_compiled_graph_import",
+        "//legend-pure/legend-pure-dsl/legend-pure-dsl-tds/legend-pure-m2-dsl-tds-pure:platform_dsl_tds_compiled_graph_import",
+        "//legend-pure/legend-pure-dsl/legend-pure-dsl-path/legend-pure-m2-dsl-path-pure:platform_dsl_path_compiled_graph_import",
+        "//legend-pure/legend-pure-dsl/legend-pure-dsl-diagram/legend-pure-m2-dsl-diagram-pure:platform_dsl_diagram_compiled_graph_import",
+        "//legend-pure/legend-pure-store/legend-pure-store-relational/legend-pure-m2-store-relational-pure:platform_store_relational_compiled_graph_import",
+        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-unclassified/legend-engine-pure-functions-unclassified-pure:core_functions_unclassified_compiled_graph_import",
+        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-standard/legend-engine-pure-functions-standard-pure:core_functions_standard_compiled_graph_import",
+        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-relation/legend-engine-pure-functions-relation-pure:core_functions_relation_compiled_graph_import",
+        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-json/legend-engine-pure-functions-json-pure:core_functions_json_compiled_graph_import",
+        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-variant/legend-engine-pure-functions-variant-pure:core_functions_variant_compiled_graph_import",
+        "//legend-engine/legend-engine-xts-java/legend-engine-xt-javaGeneration-pure:core_external_language_java_compiled_graph_import",
+        "//legend-engine/legend-engine-xts-java/legend-engine-xt-javaGeneration-conventions-essential-pure:core_external_language_java_conventions_essential_compiled_graph_import",
+        "//legend-engine/legend-engine-xts-java/legend-engine-xt-javaGeneration-conventions-standard-pure:core_external_language_java_conventions_standard_compiled_graph_import",
+        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-javaCompiler/legend-engine-pure-functions-javaCompiler-pure:core_external_language_java_compiler_compiled_graph_import",
     ],
 )
 
@@ -38,6 +57,7 @@ java_library(
     ],
 )
 
+
 load("//tools/build_rules:java_validation.bzl", "validated_java_library")
 
 validated_java_library(
@@ -46,6 +66,7 @@ validated_java_library(
     resources = glob(["src/main/resources/**/*"]),
     visibility = ["//visibility:public"],
     deps = [
+        ":legend-engine-protocol-pure",
         "//legend-engine/legend-engine-core/legend-engine-core-base/legend-engine-core-language-pure/legend-engine-protocol",
         "//legend-engine/legend-engine-core/legend-engine-core-shared/legend-engine-shared-extensions",
         "//legend-pure/legend-pure-runtime/legend-pure-runtime-java-engine-compiled",

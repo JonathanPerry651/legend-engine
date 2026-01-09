@@ -1,0 +1,77 @@
+load("@rules_java//java:defs.bzl", "java_binary", "java_library")
+load("//tools/build_rules:legend_java_library.bzl", "legend_java_library")
+
+java_library(
+    name = "boot",
+    srcs = glob(["src/main/java/**/*.java"]),
+    resources = glob(["src/main/resources/**/*"]),
+    resource_strip_prefix = "legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-javaCompiler/legend-engine-pure-functions-javaCompiler-pure/src/main/resources",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//legend-pure/legend-pure-core/legend-pure-m3-core",
+        "//legend-pure/legend-pure-core/legend-pure-m4",
+        "//legend-engine/legend-engine-xts-java/legend-engine-xt-javaGeneration-pure",
+        "@legend_maven//:org_eclipse_collections_eclipse_collections",
+        "@legend_maven//:org_eclipse_collections_eclipse_collections_api",
+    ],
+)
+
+java_binary(
+    name = "compiled_metadata_generator",
+    main_class = "org.finos.legend.pure.runtime.java.compiled.generation.orchestrator.JavaCodeGeneration",
+    runtime_deps = [
+        "//legend-pure/legend-pure-runtime/legend-pure-runtime-java-engine-compiled",
+        ":boot",
+        "//legend-engine/legend-engine-xts-java/legend-engine-xt-javaGeneration-pure",
+        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-javaCompiler/legend-engine-pure-runtime-java-extension-compiled-functions-javaCompiler",
+        "//legend-pure/legend-pure-dsl/legend-pure-dsl-diagram/legend-pure-m2-dsl-diagram-grammar",
+        "//legend-pure/legend-pure-dsl/legend-pure-dsl-graph/legend-pure-m2-dsl-graph-grammar",
+        "//legend-pure/legend-pure-dsl/legend-pure-dsl-mapping/legend-pure-m2-dsl-mapping-grammar",
+        "//legend-pure/legend-pure-dsl/legend-pure-dsl-path/legend-pure-m2-dsl-path-grammar",
+        "//legend-pure/legend-pure-dsl/legend-pure-dsl-store/legend-pure-m2-dsl-store-grammar",
+        "//legend-pure/legend-pure-dsl/legend-pure-dsl-tds/legend-pure-m2-dsl-tds-grammar",
+        "//legend-pure/legend-pure-store/legend-pure-store-relational/legend-pure-m2-store-relational-grammar",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+legend_java_library(
+    name = "legend-engine-pure-functions-javaCompiler-pure",
+    pure_repository = "core_external_language_java_compiler",
+    pure_generator = ":compiled_metadata_generator",
+    srcs = [],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":boot",
+        "//legend-pure/legend-pure-core/legend-pure-m3-core",
+        "//legend-pure/legend-pure-core/legend-pure-m4",
+        "//legend-engine/legend-engine-xts-java/legend-engine-xt-javaGeneration-pure",
+        "@legend_maven//:org_eclipse_collections_eclipse_collections",
+        "@legend_maven//:org_eclipse_collections_eclipse_collections_api",
+    ],
+)
+
+
+genrule(
+    name = "core_external_language_java_compiler_compiled_graph",
+    srcs = glob(["src/main/resources/**/*"]),
+    outs = ["core_external_language_java_compiler_compiled_metadata.jar"],
+    tools = [":compiled_metadata_generator"],
+    cmd = """
+    mkdir -p $(@D)/javaCompiler_gen_out
+    mkdir -p $(@D)/javaCompiler_classes_out
+    $(location :compiled_metadata_generator) \\
+        core_external_language_java_compiler \\
+        $(@D)/javaCompiler_classes_out \\
+        $(@D)/javaCompiler_gen_out
+
+    jar cf $@ -C $(@D)/javaCompiler_classes_out metadata
+    """,
+    visibility = ["//visibility:public"],
+)
+
+java_import(
+    name = "core_external_language_java_compiler_compiled_graph_import",
+    jars = [":core_external_language_java_compiler_compiled_metadata.jar"],
+    visibility = ["//visibility:public"],
+)

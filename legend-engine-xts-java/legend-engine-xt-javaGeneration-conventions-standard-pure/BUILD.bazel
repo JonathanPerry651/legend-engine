@@ -1,13 +1,81 @@
-load("@rules_java//java:defs.bzl", "java_library")
+load("//tools/build_rules:legend_java_library.bzl", "legend_java_library")
 
 java_library(
-    name = "legend-engine-xt-javaGeneration-conventions-standard-pure",
-    srcs = glob(["src/main/java/**/*.java"]),
+    name = "boot",
+    srcs = ["src/main/java/org/finos/legend/pure/code/core/CoreJavaGenerationConventionsStandardCodeRepositoryProvider.java"],
     resources = glob(["src/main/resources/**/*"]),
     visibility = ["//visibility:public"],
     deps = [
-        "//legend-engine/legend-engine-xts-java/legend-engine-xt-javaGeneration-conventions-essential-pure",
         "//legend-pure/legend-pure-core/legend-pure-m3-core",
         "//legend-pure/legend-pure-core/legend-pure-m4",
+        "@legend_maven//:org_eclipse_collections_eclipse_collections",
+        "@legend_maven//:org_eclipse_collections_eclipse_collections_api",
     ],
+)
+
+legend_java_library(
+    name = "legend-engine-xt-javaGeneration-conventions-standard-pure",
+    pure_repository = "core_external_language_java_conventions_standard",
+    pure_generator = "//legend-engine/legend-engine-xts-java/legend-engine-xt-javaGeneration-pure:Generator",
+    srcs = [],
+    exports = [":boot"],
+    tags = ["maven_coordinates=org.finos.legend.engine:legend-engine-xt-javaGeneration-conventions-standard-pure:0.0.0-SNAPSHOT"],
+    validate = True,
+    include_metadata = True,
+    javacopts = [
+        "-Xep:IdentityBinaryExpression:OFF",
+        "-Xep:IsInstanceIncompatibleType:OFF",
+        "-Xep:ComparableType:OFF",
+        "-Xep:SelfEquals:OFF",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":boot",
+        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-compiled-core",
+        "//legend-engine/legend-engine-xts-java/legend-engine-xt-javaGeneration-conventions-essential-pure",
+        "//legend-engine/legend-engine-xts-java/legend-engine-xt-javaGeneration-pure",
+        "//legend-pure/legend-pure-core/legend-pure-m3-core",
+        "//legend-pure/legend-pure-core/legend-pure-m4",
+        "//legend-pure/legend-pure-runtime/legend-pure-runtime-java-engine-compiled",
+        "@legend_maven//:org_eclipse_collections_eclipse_collections",
+        "@legend_maven//:org_eclipse_collections_eclipse_collections_api",
+    ],
+)
+
+java_binary(
+    name = "compiled_metadata_generator",
+    main_class = "org.finos.legend.pure.runtime.java.compiled.generation.orchestrator.JavaCodeGeneration",
+    runtime_deps = [
+        "//legend-pure/legend-pure-runtime/legend-pure-runtime-java-engine-compiled",
+        ":legend-engine-xt-javaGeneration-conventions-standard-pure",
+        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-standard/legend-engine-pure-functions-standard-pure",
+        "//legend-engine/legend-engine-xts-java/legend-engine-xt-javaGeneration-pure",
+        "//legend-engine/legend-engine-xts-java/legend-engine-xt-javaGeneration-conventions-essential-pure",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+genrule(
+    name = "core_external_language_java_conventions_standard_compiled_graph",
+    srcs = glob(["src/main/resources/**/*"]),
+    outs = ["core_external_language_java_conventions_standard_compiled_metadata.jar"],
+    tools = [":compiled_metadata_generator"],
+    cmd = """
+    mkdir -p $(@D)/stdConv_gen_out
+    mkdir -p $(@D)/stdConv_classes_out
+    export JAVA_OPTS="-Dpure.usePar=false"
+    $(location :compiled_metadata_generator) \
+        core_external_language_java_conventions_standard \
+        $(@D)/stdConv_classes_out \
+        $(@D)/stdConv_gen_out
+
+    jar cf $@ -C $(@D)/stdConv_classes_out metadata
+    """,
+    visibility = ["//visibility:public"],
+)
+
+java_import(
+    name = "core_external_language_java_conventions_standard_compiled_graph_import",
+    jars = [":core_external_language_java_conventions_standard_compiled_metadata.jar"],
+    visibility = ["//visibility:public"],
 )

@@ -1,6 +1,5 @@
 load("@rules_java//java:defs.bzl", "java_binary", "java_library")
-load("//tools/build_rules:java_validation.bzl", "validated_java_library")
-load("//tools/build_rules:pure_compiled.bzl", "pure_sources")
+load("//tools/build_rules:legend_java_library.bzl", "legend_java_library")
 
 java_binary(
     name = "Generator",
@@ -19,21 +18,17 @@ java_binary(
     ],
 )
 
-pure_sources(
-    name = "platform_dsl_path_java_src",
-    generator = ":Generator",
-    repository = "platform_dsl_path",
-    visibility = ["//visibility:public"],
-)
-
-validated_java_library(
+legend_java_library(
     name = "legend-engine-pure-platform-dsl-path-java",
-    srcs = [":platform_dsl_path_java_src"],
+    pure_repository = "platform_dsl_path",
+    pure_generator = ":Generator",
     javacopts = [
         "-Xep:IdentityBinaryExpression:OFF",
         "-Xep:ComparableType:OFF",
         "-Xep:IsInstanceIncompatibleType:OFF",
     ],
+    tags = ["maven_coordinates=org.finos.legend.pure:legend-pure-platform-dsl-path-java:0.0.0-SNAPSHOT"],
+    validate = True,
     visibility = ["//visibility:public"],
     deps = [
         "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-platform-modular-generation/legend-engine-pure-platform-java",

@@ -6,9 +6,62 @@ java_library(
     resources = glob(["src/main/resources/**/*"]),
     visibility = ["//visibility:public"],
     deps = [
+        ":core_functions_variant_metadata_lib",
         "//legend-pure/legend-pure-core/legend-pure-m3-core",
         "//legend-pure/legend-pure-core/legend-pure-m4",
         "@legend_maven//:org_eclipse_collections_eclipse_collections",
         "@legend_maven//:org_eclipse_collections_eclipse_collections_api",
     ],
+)
+
+java_library(
+    name = "core_functions_variant_metadata_lib",
+    resources = [":core_functions_variant_metadata"],
+    resource_strip_prefix = "legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-variant/legend-engine-pure-functions-variant-pure",
+    visibility = ["//visibility:public"],
+)
+
+genrule(
+    name = "core_functions_variant_metadata",
+    srcs = ["src/main/resources/core_functions_variant.definition.json"],
+    outs = ["metadata/specs/core_functions_variant.json"],
+    cmd = "mkdir -p $$(dirname $@) && python3 -c \"import sys, json; d=json.load(sys.stdin); d.pop('pattern', None); print(json.dumps(d))\" < $< > $@",
+    visibility = ["//visibility:public"],
+)
+
+java_binary(
+    name = "compiled_metadata_generator",
+    main_class = "org.finos.legend.pure.runtime.java.compiled.generation.orchestrator.JavaCodeGeneration",
+    runtime_deps = [
+        "//legend-pure/legend-pure-runtime/legend-pure-runtime-java-engine-compiled",
+        ":legend-engine-pure-functions-variant-pure",
+        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-json/legend-engine-pure-functions-json-pure",
+        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-variant/legend-engine-pure-runtime-java-extension-compiled-functions-variant",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+genrule(
+    name = "core_functions_variant_compiled_graph",
+    srcs = glob(["src/main/resources/**/*"]),
+    outs = ["core_functions_variant_compiled_metadata.jar"],
+    tools = [":compiled_metadata_generator"],
+    cmd = """
+    mkdir -p $(@D)/variant_gen_out
+    mkdir -p $(@D)/variant_classes_out
+    export JAVA_OPTS="-Dpure.usePar=false"
+    $(location :compiled_metadata_generator) \
+        core_functions_variant \
+        $(@D)/variant_classes_out \
+        $(@D)/variant_gen_out
+
+    jar cf $@ -C $(@D)/variant_classes_out metadata
+    """,
+    visibility = ["//visibility:public"],
+)
+
+java_import(
+    name = "core_functions_variant_compiled_graph_import",
+    jars = [":core_functions_variant_compiled_metadata.jar"],
+    visibility = ["//visibility:public"],
 )
