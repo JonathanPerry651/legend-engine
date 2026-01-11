@@ -52,21 +52,14 @@ legend_java_library(
 )
 
 
-genrule(
+load("//legend-pure/legend-pure-core/legend-pure-m3-core:pure.bzl", "pure_compiled_metadata_gen")
+
+pure_compiled_metadata_gen(
     name = "core_external_language_java_compiler_compiled_graph",
     srcs = glob(["src/main/resources/**/*"]),
-    outs = ["core_external_language_java_compiler_compiled_metadata.jar"],
-    tools = [":compiled_metadata_generator"],
-    cmd = """
-    mkdir -p $(@D)/javaCompiler_gen_out
-    mkdir -p $(@D)/javaCompiler_classes_out
-    $(location :compiled_metadata_generator) \\
-        core_external_language_java_compiler \\
-        $(@D)/javaCompiler_classes_out \\
-        $(@D)/javaCompiler_gen_out
-
-    jar cf $@ -C $(@D)/javaCompiler_classes_out metadata
-    """,
+    out = "core_external_language_java_compiler_compiled_metadata.jar",
+    module_name = "core_external_language_java_compiler",
+    tool = ":compiled_metadata_generator",
     visibility = ["//visibility:public"],
 )
 

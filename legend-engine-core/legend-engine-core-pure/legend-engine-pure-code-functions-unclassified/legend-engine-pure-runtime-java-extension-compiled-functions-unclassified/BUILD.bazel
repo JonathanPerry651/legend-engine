@@ -35,35 +35,8 @@ java_binary(
     ],
 )
 
-genrule(
-    name = "generate_sources",
-    outs = ["compiled_functions_unclassified_src.srcjar"],
-    cmd = """
-        mkdir -p work_dir/classes
-        mkdir -p work_dir/target
+load("//tools/build_rules:legend_java_library.bzl", "legend_java_library")
 
-        $(location :Generator) \
-            core_functions_unclassified \
-            work_dir/classes \
-            work_dir/target
-
-        if [ -d work_dir/target/generated-sources ]; then
-             cd work_dir/target/generated-sources
-             zip -q -r ../../../$(location compiled_functions_unclassified_src.srcjar) .
-             cd ../../..
-        elif [ -d work_dir/target/generated-test-sources ]; then
-             cd work_dir/target/generated-test-sources
-             zip -q -r ../../../$(location compiled_functions_unclassified_src.srcjar) .
-             cd ../../..
-        else
-             echo "No sources generated"
-             ls -R work_dir
-             exit 1
-        fi
-    """,
-    tools = [":Generator"],
-    visibility = ["//visibility:public"],
-)
 
 java_library(
     name = "boot",
@@ -85,9 +58,12 @@ java_library(
     ],
 )
 
-java_library(
+legend_java_library(
     name = "legend-engine-pure-runtime-java-extension-compiled-functions-unclassified",
-    srcs = [":compiled_functions_unclassified_src.srcjar"],
+    pure_repository = "core_functions_unclassified",
+    pure_generator = ":Generator",
+    pure_srcs = ["//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-unclassified/legend-engine-pure-functions-unclassified-pure"],
+    include_metadata = True,
     javacopts = ["-Xep:ComparableType:OFF"],
     visibility = ["//visibility:public"],
     exports = [

@@ -29,6 +29,7 @@ java_binary(
         "//legend-engine/legend-engine-xts-java/legend-engine-xt-javaGeneration-conventions-essential-pure:core_external_language_java_conventions_essential_compiled_graph_import",
         "//legend-engine/legend-engine-xts-java/legend-engine-xt-javaGeneration-conventions-standard-pure:core_external_language_java_conventions_standard_compiled_graph_import",
         "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-javaCompiler/legend-engine-pure-functions-javaCompiler-pure:core_external_language_java_compiler_compiled_graph_import",
+        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-compiled-core",
     ],
 )
 
@@ -60,7 +61,7 @@ java_library(
 
 load("//tools/build_rules:java_validation.bzl", "validated_java_library")
 
-validated_java_library(
+java_library(
     name = "protocol-pure-v1",
     srcs = glob(["src/main/java/**/*.java"]),
     resources = glob(["src/main/resources/**/*"]),

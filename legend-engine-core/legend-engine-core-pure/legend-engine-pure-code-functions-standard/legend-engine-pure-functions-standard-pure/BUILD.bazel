@@ -69,26 +69,25 @@ java_binary(
         "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-variant/legend-engine-pure-functions-variant-pure",
         "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-relation/legend-engine-pure-functions-relation-pure",
         "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-standard/legend-engine-pure-runtime-java-extension-compiled-functions-standard",
+        "//legend-pure/legend-pure-dsl/legend-pure-dsl-diagram/legend-pure-m2-dsl-diagram-grammar",
+        "//legend-pure/legend-pure-dsl/legend-pure-dsl-graph/legend-pure-m2-dsl-graph-grammar",
+        "//legend-pure/legend-pure-dsl/legend-pure-dsl-mapping/legend-pure-m2-dsl-mapping-grammar",
+        "//legend-pure/legend-pure-dsl/legend-pure-dsl-path/legend-pure-m2-dsl-path-grammar",
+        "//legend-pure/legend-pure-dsl/legend-pure-dsl-store/legend-pure-m2-dsl-store-grammar",
+        "//legend-pure/legend-pure-dsl/legend-pure-dsl-tds/legend-pure-m2-dsl-tds-grammar",
+        "//legend-pure/legend-pure-store/legend-pure-store-relational/legend-pure-m2-store-relational-grammar",
     ],
     visibility = ["//visibility:public"],
 )
 
-genrule(
+load("//legend-pure/legend-pure-core/legend-pure-m3-core:pure.bzl", "pure_compiled_metadata_gen")
+
+pure_compiled_metadata_gen(
     name = "core_functions_standard_compiled_graph",
     srcs = glob(["src/main/resources/**/*"]),
-    outs = ["core_functions_standard_compiled_metadata.jar"],
-    tools = [":compiled_metadata_generator"],
-    cmd = """
-    mkdir -p $(@D)/standard_gen_out
-    mkdir -p $(@D)/standard_classes_out
-    export JAVA_OPTS="-Dpure.usePar=false"
-    $(location :compiled_metadata_generator) \
-        core_functions_standard \
-        $(@D)/standard_classes_out \
-        $(@D)/standard_gen_out
-
-    jar cf $@ -C $(@D)/standard_classes_out metadata
-    """,
+    out = "core_functions_standard_compiled_metadata.jar",
+    module_name = "core_functions_standard",
+    tool = ":compiled_metadata_generator",
     visibility = ["//visibility:public"],
 )
 
