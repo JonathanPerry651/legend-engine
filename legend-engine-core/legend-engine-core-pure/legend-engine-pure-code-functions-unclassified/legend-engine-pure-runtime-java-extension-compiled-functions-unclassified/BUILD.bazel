@@ -1,4 +1,5 @@
 load("@rules_java//java:defs.bzl", "java_binary", "java_library")
+load("//tools/build_rules:legend_java_library.bzl", "legend_java_library")
 
 java_library(
     name = "resources",
@@ -35,15 +36,15 @@ java_binary(
     ],
 )
 
-load("//tools/build_rules:legend_java_library.bzl", "legend_java_library")
-
-
 java_library(
     name = "boot",
     srcs = [
         "src/main/java/org/finos/legend/pure/runtime/java/extension/functions/compiled/Base_Compiled_PCTReportProvider.java",
         "src/main/java/org/finos/legend/pure/runtime/java/extension/functions/compiled/FunctionsExtensionCompiled.java",
         "src/main/java/org/finos/legend/pure/runtime/java/extension/functions/compiled/FunctionsHelper.java",
+        "src/main/java/org/finos/legend/pure/runtime/java/extension/functions/compiled/natives/MayExecuteAlloyTest.java",
+        "src/main/java/org/finos/legend/pure/runtime/java/extension/functions/compiled/natives/MayExecuteLegendTest.java",
+        "src/main/java/org/finos/legend/pure/runtime/java/extension/functions/compiled/natives/Profile.java",
         "src/main/java/org/finos/legend/pure/runtime/java/extension/functions/compiled/natives/cipher/Decrypt.java",
         "src/main/java/org/finos/legend/pure/runtime/java/extension/functions/compiled/natives/cipher/Encrypt.java",
         "src/main/java/org/finos/legend/pure/runtime/java/extension/functions/compiled/natives/collection/Get.java",
@@ -54,11 +55,9 @@ java_library(
         "src/main/java/org/finos/legend/pure/runtime/java/extension/functions/compiled/natives/date/Today.java",
         "src/main/java/org/finos/legend/pure/runtime/java/extension/functions/compiled/natives/date/WeekOfYear.java",
         "src/main/java/org/finos/legend/pure/runtime/java/extension/functions/compiled/natives/hash/Hash.java",
-        "src/main/java/org/finos/legend/pure/runtime/java/extension/functions/compiled/natives/io/http/Http.java",
         "src/main/java/org/finos/legend/pure/runtime/java/extension/functions/compiled/natives/io/ReadFile.java",
+        "src/main/java/org/finos/legend/pure/runtime/java/extension/functions/compiled/natives/io/http/Http.java",
         "src/main/java/org/finos/legend/pure/runtime/java/extension/functions/compiled/natives/lang/MutateAdd.java",
-        "src/main/java/org/finos/legend/pure/runtime/java/extension/functions/compiled/natives/MayExecuteAlloyTest.java",
-        "src/main/java/org/finos/legend/pure/runtime/java/extension/functions/compiled/natives/MayExecuteLegendTest.java",
         "src/main/java/org/finos/legend/pure/runtime/java/extension/functions/compiled/natives/meta/CompileValueSpecification.java",
         "src/main/java/org/finos/legend/pure/runtime/java/extension/functions/compiled/natives/meta/FunctionDescriptorToId.java",
         "src/main/java/org/finos/legend/pure/runtime/java/extension/functions/compiled/natives/meta/IsSourceReadOnly.java",
@@ -69,7 +68,6 @@ java_library(
         "src/main/java/org/finos/legend/pure/runtime/java/extension/functions/compiled/natives/meta/NewLambdaFunction.java",
         "src/main/java/org/finos/legend/pure/runtime/java/extension/functions/compiled/natives/meta/NewProperty.java",
         "src/main/java/org/finos/legend/pure/runtime/java/extension/functions/compiled/natives/meta/NewQualifiedProperty.java",
-        "src/main/java/org/finos/legend/pure/runtime/java/extension/functions/compiled/natives/Profile.java",
         "src/main/java/org/finos/legend/pure/runtime/java/extension/functions/compiled/natives/runtime/CurrentUserId.java",
         "src/main/java/org/finos/legend/pure/runtime/java/extension/functions/compiled/natives/runtime/IsOptionSet.java",
         "src/main/java/org/finos/legend/pure/runtime/java/extension/functions/compiled/natives/string/ASCII.java",
@@ -108,11 +106,11 @@ java_library(
 
 legend_java_library(
     name = "legend-engine-pure-runtime-java-extension-compiled-functions-unclassified",
-    pure_repository = "core_functions_unclassified",
-    pure_generator = ":Generator",
-    pure_srcs = ["//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-unclassified/legend-engine-pure-functions-unclassified-pure"],
     include_metadata = True,
     javacopts = ["-Xep:ComparableType:OFF"],
+    pure_generator = ":Generator",
+    pure_repository = "core_functions_unclassified",
+    pure_srcs = ["//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-unclassified/legend-engine-pure-functions-unclassified-pure"],
     visibility = ["//visibility:public"],
     exports = [
         ":boot",

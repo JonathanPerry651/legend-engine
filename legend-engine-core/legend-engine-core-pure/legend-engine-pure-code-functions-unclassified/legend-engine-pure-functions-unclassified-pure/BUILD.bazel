@@ -1,4 +1,5 @@
 load("@rules_java//java:defs.bzl", "java_library")
+load("//legend-pure/legend-pure-core/legend-pure-m3-core:pure.bzl", "pure_compiled_metadata_gen")
 
 java_library(
     name = "legend-engine-pure-functions-unclassified-pure",
@@ -20,8 +21,8 @@ java_library(
 
 java_library(
     name = "core_functions_unclassified_metadata_lib",
-    resources = [":core_functions_unclassified_metadata"],
     resource_strip_prefix = "legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-unclassified/legend-engine-pure-functions-unclassified-pure",
+    resources = [":core_functions_unclassified_metadata"],
     visibility = ["//visibility:public"],
 )
 
@@ -36,8 +37,8 @@ genrule(
 java_binary(
     name = "compiled_metadata_generator",
     main_class = "org.finos.legend.pure.runtime.java.compiled.generation.orchestrator.JavaCodeGeneration",
+    visibility = ["//visibility:public"],
     runtime_deps = [
-        "//legend-pure/legend-pure-runtime/legend-pure-runtime-java-engine-compiled",
         ":legend-engine-pure-functions-unclassified-pure",
         "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-unclassified/legend-engine-pure-runtime-java-extension-compiled-functions-unclassified",
         "//legend-pure/legend-pure-dsl/legend-pure-dsl-diagram/legend-pure-m2-dsl-diagram-grammar",
@@ -46,12 +47,10 @@ java_binary(
         "//legend-pure/legend-pure-dsl/legend-pure-dsl-path/legend-pure-m2-dsl-path-grammar",
         "//legend-pure/legend-pure-dsl/legend-pure-dsl-store/legend-pure-m2-dsl-store-grammar",
         "//legend-pure/legend-pure-dsl/legend-pure-dsl-tds/legend-pure-m2-dsl-tds-grammar",
+        "//legend-pure/legend-pure-runtime/legend-pure-runtime-java-engine-compiled",
         "//legend-pure/legend-pure-store/legend-pure-store-relational/legend-pure-m2-store-relational-grammar",
     ],
-    visibility = ["//visibility:public"],
 )
-
-load("//legend-pure/legend-pure-core/legend-pure-m3-core:pure.bzl", "pure_compiled_metadata_gen")
 
 pure_compiled_metadata_gen(
     name = "core_functions_unclassified_compiled_graph",

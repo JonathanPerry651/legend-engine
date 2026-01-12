@@ -1,4 +1,4 @@
-load("@rules_java//java:defs.bzl", "java_binary", "java_library")
+load("@rules_java//java:defs.bzl", "java_binary")
 load("//tools/build_rules:legend_java_library.bzl", "legend_java_library")
 
 java_binary(
@@ -8,9 +8,9 @@ java_binary(
     runtime_deps = [
         "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-platform-modular-generation/legend-engine-pure-platform-java",
         "//legend-pure/legend-pure-core/legend-pure-m3-core",
-        "//legend-pure/legend-pure-core/legend-pure-m4",
-        "//legend-pure/legend-pure-core/legend-pure-m3-precisePrimitives:pure_platform_precise_primitives_par_lib",
         "//legend-pure/legend-pure-core/legend-pure-m3-precisePrimitives",
+        "//legend-pure/legend-pure-core/legend-pure-m3-precisePrimitives:pure_platform_precise_primitives_par_lib",
+        "//legend-pure/legend-pure-core/legend-pure-m4",
         "//legend-pure/legend-pure-runtime/legend-pure-runtime-java-engine-compiled",
         "@legend_maven//:org_eclipse_collections_eclipse_collections",
         "@legend_maven//:org_eclipse_collections_eclipse_collections_api",
@@ -19,21 +19,21 @@ java_binary(
 
 legend_java_library(
     name = "legend-engine-pure-platform-precisePrimitives-java",
-    pure_repository = "platform_precise_primitives",
-    pure_generator = ":Generator",
     javacopts = [
         "-Xep:IdentityBinaryExpression:OFF",
         "-Xep:ComparableType:OFF",
         "-Xep:IsInstanceIncompatibleType:OFF",
     ],
+    pure_generator = ":Generator",
+    pure_repository = "platform_precise_primitives",
     tags = ["maven_coordinates=org.finos.legend.pure:legend-engine-pure-platform-precisePrimitives-java:0.0.0-SNAPSHOT"],
     validate = True,
     visibility = ["//visibility:public"],
     deps = [
         "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-platform-modular-generation/legend-engine-pure-platform-java",
         "//legend-pure/legend-pure-core/legend-pure-m3-core",
-        "//legend-pure/legend-pure-core/legend-pure-m4",
         "//legend-pure/legend-pure-core/legend-pure-m3-precisePrimitives",
+        "//legend-pure/legend-pure-core/legend-pure-m4",
         "//legend-pure/legend-pure-runtime/legend-pure-runtime-java-engine-compiled",
         "@legend_maven//:org_eclipse_collections_eclipse_collections",
         "@legend_maven//:org_eclipse_collections_eclipse_collections_api",

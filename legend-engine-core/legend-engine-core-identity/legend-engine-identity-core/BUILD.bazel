@@ -3,10 +3,10 @@ load("@rules_java//java:defs.bzl", "java_library")
 java_library(
     name = "legend-engine-identity-core",
     srcs = [
-        "src/main/java/org/finos/legend/engine/shared/core/identity/credential/AnonymousCredential.java",
         "src/main/java/org/finos/legend/engine/shared/core/identity/Credential.java",
-        "src/main/java/org/finos/legend/engine/shared/core/identity/factory/IdentityFactory.java",
         "src/main/java/org/finos/legend/engine/shared/core/identity/Identity.java",
+        "src/main/java/org/finos/legend/engine/shared/core/identity/credential/AnonymousCredential.java",
+        "src/main/java/org/finos/legend/engine/shared/core/identity/factory/IdentityFactory.java",
     ],
     visibility = ["//visibility:public"],
     deps = [

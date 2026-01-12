@@ -1,4 +1,4 @@
-load("@rules_java//java:defs.bzl", "java_binary", "java_library")
+load("@rules_java//java:defs.bzl", "java_binary")
 load("//tools/build_rules:legend_java_library.bzl", "legend_java_library")
 
 java_binary(
@@ -16,17 +16,17 @@ java_binary(
 
 legend_java_library(
     name = "legend-engine-pure-platform-java",
-    pure_repository = "platform",
-    pure_generator = ":Generator",
-    pure_exclusions = [
-        "org/finos/legend/pure/generated/CoreGen.java",
-        "org/finos/legend/pure/generated/Root_meta_pure_functions_lang_KeyValue.java",
-    ],
     javacopts = [
         "-Xep:IdentityBinaryExpression:OFF",
         "-Xep:ComparableType:OFF",
         "-Xep:IsInstanceIncompatibleType:OFF",
     ],
+    pure_exclusions = [
+        "org/finos/legend/pure/generated/CoreGen.java",
+        "org/finos/legend/pure/generated/Root_meta_pure_functions_lang_KeyValue.java",
+    ],
+    pure_generator = ":Generator",
+    pure_repository = "platform",
     tags = ["maven_coordinates=org.finos.legend.pure:legend-pure-platform-java:0.0.0-SNAPSHOT"],
     validate = True,
     visibility = ["//visibility:public"],

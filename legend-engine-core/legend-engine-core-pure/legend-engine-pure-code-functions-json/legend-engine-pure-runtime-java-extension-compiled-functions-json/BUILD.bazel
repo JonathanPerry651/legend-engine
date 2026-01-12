@@ -1,4 +1,5 @@
 load("@rules_java//java:defs.bzl", "java_binary", "java_library")
+load("//tools/build_rules:legend_java_library.bzl", "legend_java_library")
 
 java_library(
     name = "resources",
@@ -24,22 +25,20 @@ java_binary(
     ],
 )
 
-load("//tools/build_rules:legend_java_library.bzl", "legend_java_library")
-
 java_library(
     name = "boot",
     srcs = [
         "src/main/java/org/finos/legend/pure/runtime/java/extension/external/json/compiled/CompiledJsonExtraTypeProcessor.java",
         "src/main/java/org/finos/legend/pure/runtime/java/extension/external/json/compiled/JsonExtensionCompiled.java",
         "src/main/java/org/finos/legend/pure/runtime/java/extension/external/json/compiled/JsonNativeImplementation.java",
+        "src/main/java/org/finos/legend/pure/runtime/java/extension/external/json/compiled/PureMapSerializer.java",
         "src/main/java/org/finos/legend/pure/runtime/java/extension/external/json/compiled/natives/EqualJsonStrings.java",
         "src/main/java/org/finos/legend/pure/runtime/java/extension/external/json/compiled/natives/Escape.java",
-        "src/main/java/org/finos/legend/pure/runtime/java/extension/external/json/compiled/natives/FromJsonDeprecated.java",
         "src/main/java/org/finos/legend/pure/runtime/java/extension/external/json/compiled/natives/FromJson.java",
+        "src/main/java/org/finos/legend/pure/runtime/java/extension/external/json/compiled/natives/FromJsonDeprecated.java",
         "src/main/java/org/finos/legend/pure/runtime/java/extension/external/json/compiled/natives/JsonParserHelper.java",
         "src/main/java/org/finos/legend/pure/runtime/java/extension/external/json/compiled/natives/ParseJSON.java",
         "src/main/java/org/finos/legend/pure/runtime/java/extension/external/json/compiled/natives/ToJsonBeta.java",
-        "src/main/java/org/finos/legend/pure/runtime/java/extension/external/json/compiled/PureMapSerializer.java",
     ],
     javacopts = ["-Xep:ComparableType:OFF"],
     resources = glob(["src/main/resources/**/*"]),
@@ -60,13 +59,13 @@ java_library(
 
 legend_java_library(
     name = "legend-engine-pure-runtime-java-extension-compiled-functions-json",
-    src_root = "legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-json/legend-engine-pure-runtime-java-extension-compiled-functions-json/src/main/java",
     srcs = [],
-    pure_repository = "core_functions_json",
-    pure_srcs = ["//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-json/legend-engine-pure-functions-json-pure"],
-    pure_generator = ":Generator",
     include_metadata = True,
     javacopts = ["-Xep:ComparableType:OFF"],
+    pure_generator = ":Generator",
+    pure_repository = "core_functions_json",
+    pure_srcs = ["//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-json/legend-engine-pure-functions-json-pure"],
+    src_root = "legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-json/legend-engine-pure-runtime-java-extension-compiled-functions-json/src/main/java",
     visibility = ["//visibility:public"],
     exports = [
         ":boot",

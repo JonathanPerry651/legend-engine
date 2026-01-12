@@ -1,4 +1,5 @@
 load("@rules_java//java:defs.bzl", "java_binary", "java_library")
+load("//tools/build_rules:legend_java_library.bzl", "legend_java_library")
 
 java_library(
     name = "resources",
@@ -37,12 +38,12 @@ java_binary(
     ],
 )
 
-load("//tools/build_rules:legend_java_library.bzl", "legend_java_library")
-
 java_library(
     name = "boot",
     srcs = [
         "src/main/java/org/finos/legend/pure/runtime/java/extension/functions/standard/compiled/Base_Compiled_Standard_PCTReportProvider.java",
+        "src/main/java/org/finos/legend/pure/runtime/java/extension/functions/standard/compiled/StandardFunctionsExtensionCompiled.java",
+        "src/main/java/org/finos/legend/pure/runtime/java/extension/functions/standard/compiled/StandardFunctionsHelper.java",
         "src/main/java/org/finos/legend/pure/runtime/java/extension/functions/standard/compiled/natives/date/operation/TimeBucketDateTime.java",
         "src/main/java/org/finos/legend/pure/runtime/java/extension/functions/standard/compiled/natives/date/operation/TimeBucketStrictDate.java",
         "src/main/java/org/finos/legend/pure/runtime/java/extension/functions/standard/compiled/natives/math/trigonometry/CosH.java",
@@ -56,8 +57,6 @@ java_library(
         "src/main/java/org/finos/legend/pure/runtime/java/extension/functions/standard/compiled/natives/tbd/BitShiftRight.java",
         "src/main/java/org/finos/legend/pure/runtime/java/extension/functions/standard/compiled/natives/tbd/BitXor.java",
         "src/main/java/org/finos/legend/pure/runtime/java/extension/functions/standard/compiled/natives/tbd/HashCode.java",
-        "src/main/java/org/finos/legend/pure/runtime/java/extension/functions/standard/compiled/StandardFunctionsExtensionCompiled.java",
-        "src/main/java/org/finos/legend/pure/runtime/java/extension/functions/standard/compiled/StandardFunctionsHelper.java",
     ],
     javacopts = ["-Xep:ComparableType:OFF"],
     resources = glob(["src/main/resources/**/*"]),
@@ -79,13 +78,13 @@ java_library(
 
 legend_java_library(
     name = "legend-engine-pure-runtime-java-extension-compiled-functions-standard",
-    src_root = "legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-standard/legend-engine-pure-runtime-java-extension-compiled-functions-standard/src/main/java",
     srcs = [],
-    pure_repository = "core_functions_standard",
-    pure_srcs = ["//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-standard/legend-engine-pure-functions-standard-pure"],
-    pure_generator = ":Generator",
     include_metadata = True,
     javacopts = ["-Xep:ComparableType:OFF"],
+    pure_generator = ":Generator",
+    pure_repository = "core_functions_standard",
+    pure_srcs = ["//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-standard/legend-engine-pure-functions-standard-pure"],
+    src_root = "legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-standard/legend-engine-pure-runtime-java-extension-compiled-functions-standard/src/main/java",
     visibility = ["//visibility:public"],
     exports = [
         ":boot",

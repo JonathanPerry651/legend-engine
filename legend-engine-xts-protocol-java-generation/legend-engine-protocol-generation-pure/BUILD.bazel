@@ -1,13 +1,12 @@
 load("@rules_java//java:defs.bzl", "java_binary", "java_library")
-load("//tools/build_rules:legend_java_library.bzl", "legend_java_library")
 load("//legend-pure/legend-pure-core/legend-pure-m3-core:pure.bzl", "pure_par")
+load("//tools/build_rules:legend_java_library.bzl", "legend_java_library")
 
 java_library(
     name = "resources",
     resources = glob(["src/main/resources/**/*"]),
     visibility = ["//visibility:public"],
 )
-
 
 java_library(
     name = "boot",
@@ -50,36 +49,37 @@ java_binary(
 
 legend_java_library(
     name = "legend-engine-protocol-generation-pure",
-    pure_repository = "core_protocol_generation",
-    pure_generator = ":Generator",
-    pure_srcs = glob([
-        "src/main/resources/**/*.pure",
-        "src/main/resources/**/*.json",
-    ]),
     srcs = [],
     include_metadata = True,
-    exports = [
-        ":boot",
-        ":core_protocol_generation_metadata_lib",
-        ":core_protocol_generation_par_lib",
-        ":legend-engine-protocol-generation-pure_metadata",
-    ],
-    tags = ["maven_coordinates=org.finos.legend.engine:legend-engine-protocol-generation-pure:0.0.0-SNAPSHOT"],
-    validate = True,
     javacopts = [
         "-Xep:IdentityBinaryExpression:OFF",
         "-Xep:IsInstanceIncompatibleType:OFF",
         "-Xep:ComparableType:OFF",
         "-Xep:SelfEquals:OFF",
     ],
+    pure_generator = ":Generator",
+    pure_repository = "core_protocol_generation",
+    pure_srcs = glob([
+        "src/main/resources/**/*.pure",
+        "src/main/resources/**/*.json",
+    ]),
+    tags = ["maven_coordinates=org.finos.legend.engine:legend-engine-protocol-generation-pure:0.0.0-SNAPSHOT"],
+    validate = True,
     visibility = ["//visibility:public"],
+    exports = [
+        ":boot",
+        ":core_protocol_generation_metadata_lib",
+        ":core_protocol_generation_par_lib",
+        ":legend-engine-protocol-generation-pure_metadata",
+    ],
     deps = [
         ":boot",
+        ":core_protocol_generation_metadata_lib",
         ":resources",
         "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-compiled-core",
-        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-standard/legend-engine-pure-runtime-java-extension-compiled-functions-standard",
         "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-standard/legend-engine-pure-functions-standard-pure",
         "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-standard/legend-engine-pure-functions-standard-pure:legend-engine-pure-functions-standard-pure_metadata",
+        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-standard/legend-engine-pure-runtime-java-extension-compiled-functions-standard",
         "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-unclassified/legend-engine-pure-runtime-java-extension-compiled-functions-unclassified",
         "//legend-engine/legend-engine-xts-java/legend-engine-xt-javaGeneration-conventions-essential-pure",
         "//legend-engine/legend-engine-xts-java/legend-engine-xt-javaGeneration-conventions-essential-pure:legend-engine-xt-javaGeneration-conventions-essential-pure_metadata",
@@ -94,14 +94,13 @@ legend_java_library(
         "@legend_maven//:com_googlecode_json_simple_json_simple",
         "@legend_maven//:org_eclipse_collections_eclipse_collections",
         "@legend_maven//:org_eclipse_collections_eclipse_collections_api",
-        ":core_protocol_generation_metadata_lib",
     ],
 )
 
 java_library(
     name = "core_protocol_generation_metadata_lib",
-    resources = [":core_protocol_generation_metadata"],
     resource_strip_prefix = "legend-engine/legend-engine-xts-protocol-java-generation/legend-engine-protocol-generation-pure",
+    resources = [":core_protocol_generation_metadata"],
     visibility = ["//visibility:public"],
 )
 
@@ -119,31 +118,31 @@ java_binary(
     runtime_deps = [
         ":boot",
         ":resources",
+        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-compiled-core",
+        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-compiled-core:core_par_lib",
+        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-compiled-core:legend-engine-pure-code-compiled-core_metadata",
+        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-standard/legend-engine-pure-functions-standard-pure",
+        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-standard/legend-engine-pure-functions-standard-pure:legend-engine-pure-functions-standard-pure_metadata",
+        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-unclassified/legend-engine-pure-functions-unclassified-pure",
+        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-unclassified/legend-engine-pure-functions-unclassified-pure:core_functions_unclassified_metadata_lib",
+        "//legend-engine/legend-engine-xts-java/legend-engine-xt-javaGeneration-conventions-essential-pure",
+        "//legend-engine/legend-engine-xts-java/legend-engine-xt-javaGeneration-conventions-essential-pure:legend-engine-xt-javaGeneration-conventions-essential-pure_metadata",
+        "//legend-engine/legend-engine-xts-java/legend-engine-xt-javaGeneration-conventions-standard-pure",
+        "//legend-engine/legend-engine-xts-java/legend-engine-xt-javaGeneration-conventions-standard-pure:legend-engine-xt-javaGeneration-conventions-standard-pure_metadata",
+        "//legend-engine/legend-engine-xts-java/legend-engine-xt-javaGeneration-pure",
         "//legend-pure/legend-pure-core/legend-pure-m3-core",
         "//legend-pure/legend-pure-core/legend-pure-m4",
         "//legend-pure/legend-pure-dsl/legend-pure-dsl-diagram/legend-pure-m2-dsl-diagram-grammar",
         "//legend-pure/legend-pure-dsl/legend-pure-dsl-graph/legend-pure-m2-dsl-graph-grammar",
         "//legend-pure/legend-pure-dsl/legend-pure-dsl-mapping/legend-pure-m2-dsl-mapping-grammar",
-        "//legend-pure/legend-pure-dsl/legend-pure-dsl-path/legend-pure-m2-dsl-path-grammar",
-        "//legend-pure/legend-pure-dsl/legend-pure-dsl-store/legend-pure-m2-dsl-store-grammar",
-        "//legend-pure/legend-pure-dsl/legend-pure-dsl-tds/legend-pure-m2-dsl-tds-grammar",
-        "//legend-pure/legend-pure-store/legend-pure-store-relational/legend-pure-m2-store-relational-grammar",
-        "//legend-engine/legend-engine-xts-java/legend-engine-xt-javaGeneration-pure",
-        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-compiled-core",
-        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-compiled-core:legend-engine-pure-code-compiled-core_metadata",
-        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-compiled-core:core_par_lib",
-        "//legend-engine/legend-engine-xts-java/legend-engine-xt-javaGeneration-conventions-essential-pure",
-        "//legend-engine/legend-engine-xts-java/legend-engine-xt-javaGeneration-conventions-essential-pure:legend-engine-xt-javaGeneration-conventions-essential-pure_metadata",
-        "//legend-engine/legend-engine-xts-java/legend-engine-xt-javaGeneration-conventions-standard-pure",
-        "//legend-engine/legend-engine-xts-java/legend-engine-xt-javaGeneration-conventions-standard-pure:legend-engine-xt-javaGeneration-conventions-standard-pure_metadata",
-        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-standard/legend-engine-pure-functions-standard-pure",
-        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-standard/legend-engine-pure-functions-standard-pure:legend-engine-pure-functions-standard-pure_metadata",
-        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-unclassified/legend-engine-pure-functions-unclassified-pure",
-        "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-unclassified/legend-engine-pure-functions-unclassified-pure:core_functions_unclassified_metadata_lib",
         "//legend-pure/legend-pure-dsl/legend-pure-dsl-mapping/legend-pure-m2-dsl-mapping-pure",
         "//legend-pure/legend-pure-dsl/legend-pure-dsl-mapping/legend-pure-m2-dsl-mapping-pure:platform_dsl_mapping_metadata_lib",
+        "//legend-pure/legend-pure-dsl/legend-pure-dsl-path/legend-pure-m2-dsl-path-grammar",
+        "//legend-pure/legend-pure-dsl/legend-pure-dsl-store/legend-pure-m2-dsl-store-grammar",
         "//legend-pure/legend-pure-dsl/legend-pure-dsl-store/legend-pure-m2-dsl-store-pure",
         "//legend-pure/legend-pure-dsl/legend-pure-dsl-store/legend-pure-m2-dsl-store-pure:platform_dsl_store_metadata_lib",
+        "//legend-pure/legend-pure-dsl/legend-pure-dsl-tds/legend-pure-m2-dsl-tds-grammar",
+        "//legend-pure/legend-pure-store/legend-pure-store-relational/legend-pure-m2-store-relational-grammar",
         "@legend_maven//:org_eclipse_collections_eclipse_collections",
         "@legend_maven//:org_eclipse_collections_eclipse_collections_api",
     ],

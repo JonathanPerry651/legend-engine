@@ -1,4 +1,4 @@
-load("@rules_java//java:defs.bzl", "java_binary", "java_library")
+load("@rules_java//java:defs.bzl", "java_binary")
 load("//tools/build_rules:legend_java_library.bzl", "legend_java_library")
 
 java_binary(
@@ -20,13 +20,13 @@ java_binary(
 
 legend_java_library(
     name = "legend-engine-pure-platform-dsl-tds-java",
-    pure_repository = "platform_dsl_tds",
-    pure_generator = ":Generator",
     javacopts = [
         "-Xep:IdentityBinaryExpression:OFF",
         "-Xep:ComparableType:OFF",
         "-Xep:IsInstanceIncompatibleType:OFF",
     ],
+    pure_generator = ":Generator",
+    pure_repository = "platform_dsl_tds",
     tags = ["maven_coordinates=org.finos.legend.pure:legend-pure-platform-dsl-tds-java:0.0.0-SNAPSHOT"],
     validate = True,
     visibility = ["//visibility:public"],

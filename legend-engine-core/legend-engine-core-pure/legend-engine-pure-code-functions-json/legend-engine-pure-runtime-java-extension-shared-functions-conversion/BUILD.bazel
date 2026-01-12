@@ -4,9 +4,9 @@ java_library(
     name = "legend-engine-pure-runtime-java-extension-shared-functions-conversion",
     srcs = [
         "src/main/java/org/finos/legend/pure/runtime/java/extension/external/shared/conversion/ClassConversion.java",
+        "src/main/java/org/finos/legend/pure/runtime/java/extension/external/shared/conversion/Conversion.java",
         "src/main/java/org/finos/legend/pure/runtime/java/extension/external/shared/conversion/ConversionCache.java",
         "src/main/java/org/finos/legend/pure/runtime/java/extension/external/shared/conversion/ConversionContext.java",
-        "src/main/java/org/finos/legend/pure/runtime/java/extension/external/shared/conversion/Conversion.java",
         "src/main/java/org/finos/legend/pure/runtime/java/extension/external/shared/conversion/DeserializationContext.java",
         "src/main/java/org/finos/legend/pure/runtime/java/extension/external/shared/conversion/EnumerationConversion.java",
         "src/main/java/org/finos/legend/pure/runtime/java/extension/external/shared/conversion/GenericAndAnyTypeNotSupportedConversion.java",
