@@ -2,7 +2,10 @@ load("@rules_java//java:defs.bzl", "java_library")
 
 java_library(
     name = "legend-engine-pure-functions-variant-pure",
-    srcs = glob(["src/main/java/**/*.java"]),
+    srcs = [
+        "src/main/java/org/finos/legend/pure/code/core/VariantCodeRepositoryProvider.java",
+        "src/main/java/org/finos/legend/pure/code/core/Variant_Functions_PCTReportProvider.java",
+    ],
     resources = glob(["src/main/resources/**/*"]),
     visibility = ["//visibility:public"],
     deps = [

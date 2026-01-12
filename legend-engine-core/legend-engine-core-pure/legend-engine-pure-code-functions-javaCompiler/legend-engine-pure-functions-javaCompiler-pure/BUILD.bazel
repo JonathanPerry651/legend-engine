@@ -3,7 +3,9 @@ load("//tools/build_rules:legend_java_library.bzl", "legend_java_library")
 
 java_library(
     name = "boot",
-    srcs = glob(["src/main/java/**/*.java"]),
+    srcs = [
+        "src/main/java/org/finos/legend/engine/external/language/java/runtime/compiler/CoreJavaRuntimeCompilerCodeRepositoryProvider.java",
+    ],
     resources = glob(["src/main/resources/**/*"]),
     resource_strip_prefix = "legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-functions-javaCompiler/legend-engine-pure-functions-javaCompiler-pure/src/main/resources",
     visibility = ["//visibility:public"],

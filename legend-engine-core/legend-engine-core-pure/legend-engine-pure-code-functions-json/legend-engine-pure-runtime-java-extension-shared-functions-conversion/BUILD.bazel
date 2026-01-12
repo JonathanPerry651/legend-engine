@@ -2,7 +2,23 @@ load("@rules_java//java:defs.bzl", "java_library")
 
 java_library(
     name = "legend-engine-pure-runtime-java-extension-shared-functions-conversion",
-    srcs = glob(["src/main/java/**/*.java"]),
+    srcs = [
+        "src/main/java/org/finos/legend/pure/runtime/java/extension/external/shared/conversion/ClassConversion.java",
+        "src/main/java/org/finos/legend/pure/runtime/java/extension/external/shared/conversion/ConversionCache.java",
+        "src/main/java/org/finos/legend/pure/runtime/java/extension/external/shared/conversion/ConversionContext.java",
+        "src/main/java/org/finos/legend/pure/runtime/java/extension/external/shared/conversion/Conversion.java",
+        "src/main/java/org/finos/legend/pure/runtime/java/extension/external/shared/conversion/DeserializationContext.java",
+        "src/main/java/org/finos/legend/pure/runtime/java/extension/external/shared/conversion/EnumerationConversion.java",
+        "src/main/java/org/finos/legend/pure/runtime/java/extension/external/shared/conversion/GenericAndAnyTypeNotSupportedConversion.java",
+        "src/main/java/org/finos/legend/pure/runtime/java/extension/external/shared/conversion/MapConversion.java",
+        "src/main/java/org/finos/legend/pure/runtime/java/extension/external/shared/conversion/ObjectFactory.java",
+        "src/main/java/org/finos/legend/pure/runtime/java/extension/external/shared/conversion/PrimitiveConversion.java",
+        "src/main/java/org/finos/legend/pure/runtime/java/extension/external/shared/conversion/PropertyConversion.java",
+        "src/main/java/org/finos/legend/pure/runtime/java/extension/external/shared/conversion/PropertyDeserialization.java",
+        "src/main/java/org/finos/legend/pure/runtime/java/extension/external/shared/conversion/PropertySerialization.java",
+        "src/main/java/org/finos/legend/pure/runtime/java/extension/external/shared/conversion/SerializationContext.java",
+        "src/main/java/org/finos/legend/pure/runtime/java/extension/external/shared/conversion/UnitConversion.java",
+    ],
     visibility = ["//visibility:public"],
     deps = [
         "//legend-pure/legend-pure-core/legend-pure-m3-core",
