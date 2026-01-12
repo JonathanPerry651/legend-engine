@@ -2,7 +2,16 @@ load("@rules_java//java:defs.bzl", "java_library")
 
 java_library(
     name = "legend-engine-shared-extensions",
-    srcs = glob(["src/main/java/**/*.java"]),
+    srcs = [
+        "src/main/java/org/finos/legend/engine/shared/core/extension/Extensions.java",
+        "src/main/java/org/finos/legend/engine/shared/core/extension/LegendConnectionExtension.java",
+        "src/main/java/org/finos/legend/engine/shared/core/extension/LegendExtension.java",
+        "src/main/java/org/finos/legend/engine/shared/core/extension/LegendExternalFormatExtension.java",
+        "src/main/java/org/finos/legend/engine/shared/core/extension/LegendGenerationExtension.java",
+        "src/main/java/org/finos/legend/engine/shared/core/extension/LegendLanguageExtension.java",
+        "src/main/java/org/finos/legend/engine/shared/core/extension/LegendModuleSpecificExtension.java",
+        "src/main/java/org/finos/legend/engine/shared/core/extension/LegendPlanExtension.java",
+    ],
     visibility = ["//visibility:public"],
     deps = [
         "//legend-engine/legend-engine-core/legend-engine-core-shared/legend-engine-shared-structures",
