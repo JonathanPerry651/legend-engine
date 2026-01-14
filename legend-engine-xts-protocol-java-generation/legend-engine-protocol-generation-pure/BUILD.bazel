@@ -1,5 +1,5 @@
 load("@rules_java//java:defs.bzl", "java_binary", "java_library")
-load("//legend-pure/legend-pure-core/legend-pure-m3-core:pure.bzl", "pure_par")
+load("//tools/build_rules:pure_generation.bzl", "pure_model_generation", "pure_par")
 load("//tools/build_rules:legend_java_library.bzl", "legend_java_library")
 
 java_library(
@@ -40,6 +40,7 @@ java_binary(
         "//legend-pure/legend-pure-dsl/legend-pure-dsl-store/legend-pure-m2-dsl-store-grammar",
         "//legend-pure/legend-pure-dsl/legend-pure-dsl-tds/legend-pure-m2-dsl-tds-grammar",
         "//legend-pure/legend-pure-runtime/legend-pure-runtime-java-engine-compiled",
+        "//legend-pure/legend-pure-dsl/legend-pure-dsl-store/legend-pure-m2-dsl-store-pure:store-compiled-extension",
         "//legend-pure/legend-pure-store/legend-pure-store-relational/legend-pure-m2-store-relational-grammar",
         "@legend_maven//:com_googlecode_json_simple_json_simple",
         "@legend_maven//:org_eclipse_collections_eclipse_collections",
@@ -89,6 +90,7 @@ legend_java_library(
         "//legend-pure/legend-pure-core/legend-pure-m3-core",
         "//legend-pure/legend-pure-core/legend-pure-m4",
         "//legend-pure/legend-pure-dsl/legend-pure-dsl-mapping/legend-pure-m2-dsl-mapping-pure:m2-dsl-mapping-pure-gen",
+        "//legend-pure/legend-pure-dsl/legend-pure-dsl-store/legend-pure-m2-dsl-store-pure:m2-dsl-store-pure-gen",
         "//legend-pure/legend-pure-dsl/legend-pure-dsl-store/legend-pure-runtime-java-extension-compiled-dsl-store",
         "//legend-pure/legend-pure-runtime/legend-pure-runtime-java-engine-compiled",
         "@legend_maven//:com_googlecode_json_simple_json_simple",
@@ -111,11 +113,12 @@ genrule(
     visibility = ["//visibility:public"],
 )
 
-java_binary(
-    name = "PureJarGenerator",
-    main_class = "org.finos.legend.pure.m3.generator.par.PureJarGenerator",
-    visibility = ["//visibility:public"],
-    runtime_deps = [
+
+pure_par(
+    name = "pure_core_protocol_generation_par",
+    out = "pure-core_protocol_generation.par",
+    repo_name = "core_protocol_generation",
+    deps = [
         ":boot",
         ":resources",
         "//legend-engine/legend-engine-core/legend-engine-core-pure/legend-engine-pure-code-compiled-core",
@@ -146,13 +149,6 @@ java_binary(
         "@legend_maven//:org_eclipse_collections_eclipse_collections",
         "@legend_maven//:org_eclipse_collections_eclipse_collections_api",
     ],
-)
-
-pure_par(
-    name = "pure_core_protocol_generation_par",
-    out = "pure-core_protocol_generation.par",
-    repo_name = "core_protocol_generation",
-    tool = ":PureJarGenerator",
     visibility = ["//visibility:public"],
 )
 

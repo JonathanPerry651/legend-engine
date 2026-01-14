@@ -24,13 +24,14 @@ import org.finos.legend.engine.protocol.pure.v1.model.packageableElement.store.m
 import org.finos.legend.engine.protocol.pure.v1.model.packageableElement.store.modelToModel.connection.ModelStringInput;
 import org.finos.legend.engine.protocol.pure.v1.model.packageableElement.store.modelToModel.connection.XmlModelConnection;
 import org.finos.legend.pure.generated.*;
+import org.finos.legend.pure.m3.coreinstance.meta.core.runtime.Connection;
 import org.finos.legend.pure.m3.coreinstance.meta.pure.functions.collection.List;
 import org.finos.legend.pure.m3.coreinstance.meta.pure.metamodel.type.Class;
 import org.finos.legend.pure.runtime.java.compiled.generation.processors.support.map.PureMap;
 
 import java.util.Objects;
 
-public class ConnectionFirstPassBuilder implements ConnectionVisitor<Root_meta_core_runtime_Connection>
+public class ConnectionFirstPassBuilder implements ConnectionVisitor<Connection>
 {
     private final CompileContext context;
 
@@ -40,7 +41,7 @@ public class ConnectionFirstPassBuilder implements ConnectionVisitor<Root_meta_c
     }
 
     @Override
-    public Root_meta_core_runtime_Connection visit(org.finos.legend.engine.protocol.pure.v1.model.packageableElement.connection.Connection connection)
+    public Connection visit(org.finos.legend.engine.protocol.pure.v1.model.packageableElement.connection.Connection connection)
     {
         return this.context.getCompilerExtensions().getExtraConnectionValueProcessors().stream()
                 .map(processor -> processor.value(connection, this.context))
@@ -50,13 +51,13 @@ public class ConnectionFirstPassBuilder implements ConnectionVisitor<Root_meta_c
     }
 
     @Override
-    public Root_meta_core_runtime_Connection visit(ConnectionPointer connectionPointer)
+    public Connection visit(ConnectionPointer connectionPointer)
     {
         return this.context.resolveConnection(connectionPointer.connection, connectionPointer.sourceInformation);
     }
 
     @Override
-    public Root_meta_core_runtime_Connection visit(ModelConnection modelConnection)
+    public Connection visit(ModelConnection modelConnection)
     {
         HelperConnectionBuilder.verifyModelConnectionStore(modelConnection.element, modelConnection.elementSourceInformation);
         MutableMap<Class<?>, List<Root_meta_pure_metamodel_type_Any_Impl>> pureInstancesMap = HelperConnectionBuilder.processModelInput((ModelStringInput) modelConnection.input, this.context, false, null);
@@ -65,7 +66,7 @@ public class ConnectionFirstPassBuilder implements ConnectionVisitor<Root_meta_c
     }
 
     @Override
-    public Root_meta_core_runtime_Connection visit(JsonModelConnection jsonModelConnection)
+    public Connection visit(JsonModelConnection jsonModelConnection)
     {
         HelperConnectionBuilder.verifyModelConnectionStore(jsonModelConnection.element, jsonModelConnection.elementSourceInformation);
         return new Root_meta_external_store_model_JsonModelConnection_Impl("", SourceInformationHelper.toM3SourceInformation(jsonModelConnection.sourceInformation), context.pureModel.getClass("meta::external::store::model::JsonModelConnection"))
@@ -74,7 +75,7 @@ public class ConnectionFirstPassBuilder implements ConnectionVisitor<Root_meta_c
     }
 
     @Override
-    public Root_meta_core_runtime_Connection visit(XmlModelConnection xmlModelConnection)
+    public Connection visit(XmlModelConnection xmlModelConnection)
     {
         HelperConnectionBuilder.verifyModelConnectionStore(xmlModelConnection.element, xmlModelConnection.elementSourceInformation);
         return new Root_meta_external_store_model_XmlModelConnection_Impl("", SourceInformationHelper.toM3SourceInformation(xmlModelConnection.sourceInformation), context.pureModel.getClass("meta::external::store::model::XmlModelConnection"))
@@ -83,7 +84,7 @@ public class ConnectionFirstPassBuilder implements ConnectionVisitor<Root_meta_c
     }
 
     @Override
-    public Root_meta_core_runtime_Connection visit(ModelChainConnection modelChainConnection)
+    public Connection visit(ModelChainConnection modelChainConnection)
     {
         HelperConnectionBuilder.verifyModelConnectionStore(modelChainConnection.element, modelChainConnection.elementSourceInformation);
         return new Root_meta_external_store_model_ModelChainConnection_Impl("", SourceInformationHelper.toM3SourceInformation(modelChainConnection.sourceInformation), context.pureModel.getClass("meta::external::store::model::ModelChainConnection"))

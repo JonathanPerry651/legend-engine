@@ -11,7 +11,6 @@ antlr_gen(
 java_library(
     name = "legend-engine-language-pure-grammar",
     srcs = [
-        "src/main/java/org/finos/legend/engine/language/pure/grammar/from/ANTLRStringStream.java",
         "src/main/java/org/finos/legend/engine/language/pure/grammar/from/CorePureGrammarParser.java",
         "src/main/java/org/finos/legend/engine/language/pure/grammar/from/DEPRECATED_PureGrammarParserLibrary.java",
         "src/main/java/org/finos/legend/engine/language/pure/grammar/from/DEPRECATED_SectionGrammarParser.java",
@@ -26,6 +25,7 @@ java_library(
         "src/main/java/org/finos/legend/engine/language/pure/grammar/from/connection/ConnectionParseTreeWalker.java",
         "src/main/java/org/finos/legend/engine/language/pure/grammar/from/connection/ConnectionParser.java",
         "src/main/java/org/finos/legend/engine/language/pure/grammar/from/connection/ModelConnectionParseTreeWalker.java",
+        "src/main/java/org/finos/legend/engine/language/pure/grammar/from/connection/ConnectionValueSourceCode.java",
         "src/main/java/org/finos/legend/engine/language/pure/grammar/from/data/DataParseTreeWalker.java",
         "src/main/java/org/finos/legend/engine/language/pure/grammar/from/data/embedded/ExternalFormatEmbeddedDataParser.java",
         "src/main/java/org/finos/legend/engine/language/pure/grammar/from/data/embedded/HelperEmbeddedDataGrammarParser.java",
@@ -104,4 +104,12 @@ java_library(
         "@legend_maven//:org_eclipse_collections_eclipse_collections_api",
         "@legend_maven//:org_slf4j_slf4j_api",
     ],
+)
+
+java_library(
+    name = "grammar-test-utils",
+    srcs = [
+        "src/test/java/org/finos/legend/engine/language/pure/grammar/test/roundtrip/embedded/extensions/NewValueSpecificationForTest.java",
+    ],
+    visibility = ["//visibility:public"],
 )

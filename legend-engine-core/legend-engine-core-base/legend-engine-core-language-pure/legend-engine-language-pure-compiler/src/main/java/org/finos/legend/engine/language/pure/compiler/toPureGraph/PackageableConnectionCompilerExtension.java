@@ -20,9 +20,10 @@ import org.finos.legend.engine.language.pure.compiler.toPureGraph.extension.Comp
 import org.finos.legend.engine.language.pure.compiler.toPureGraph.extension.Processor;
 import org.finos.legend.engine.protocol.pure.v1.model.packageableElement.connection.PackageableConnection;
 import org.finos.legend.engine.protocol.pure.v1.model.packageableElement.mapping.Mapping;
-import org.finos.legend.pure.generated.Root_meta_core_runtime_Connection;
-import org.finos.legend.pure.generated.Root_meta_pure_runtime_PackageableConnection;
-import org.finos.legend.pure.generated.Root_meta_pure_runtime_PackageableConnection_Impl;
+import org.finos.legend.pure.m3.coreinstance.meta.core.runtime.Connection;
+import org.finos.legend.pure.m3.coreinstance.meta.pure.runtime.PackageableConnection;
+import org.finos.legend.pure.m3.coreinstance.RuntimeCoreInstanceFactoryRegistry;
+import org.finos.legend.pure.m4.coreinstance.simple.SimpleCoreInstance;
 import org.finos.legend.pure.m3.coreinstance.meta.pure.metamodel.PackageableElement;
 
 public class PackageableConnectionCompilerExtension implements CompilerExtension
@@ -54,14 +55,15 @@ public class PackageableConnectionCompilerExtension implements CompilerExtension
 
     private PackageableElement packageableConnectionFirstPass(PackageableConnection packageableConnection, CompileContext context)
     {
-        Root_meta_pure_runtime_PackageableConnection metamodel = new Root_meta_pure_runtime_PackageableConnection_Impl(packageableConnection.name, SourceInformationHelper.toM3SourceInformation(packageableConnection.sourceInformation), context.pureModel.getClass("meta::pure::runtime::PackageableConnection"));
-        Root_meta_core_runtime_Connection connection = packageableConnection.connectionValue.accept(new ConnectionFirstPassBuilder(context));
+        org.finos.legend.pure.m3.coreinstance.meta.pure.runtime.PackageableConnection metamodel = (org.finos.legend.pure.m3.coreinstance.meta.pure.runtime.PackageableConnection) RuntimeCoreInstanceFactoryRegistry.REGISTRY.getFactory("meta::pure::runtime::PackageableConnection")
+                .createCoreInstance(new SimpleCoreInstance(packageableConnection.name, SourceInformationHelper.toM3SourceInformation(packageableConnection.sourceInformation), context.pureModel.getClass("meta::pure::runtime::PackageableConnection")));
+        Connection connection = packageableConnection.connectionValue.accept(new ConnectionFirstPassBuilder(context));
         return metamodel._connectionValue(connection);
     }
 
     private void packageableConnectionSecondPass(PackageableConnection packageableConnection, CompileContext context)
     {
-        final Root_meta_core_runtime_Connection pureConnection = context.pureModel.getConnection(context.pureModel.buildPackageString(packageableConnection._package, packageableConnection.name), packageableConnection.sourceInformation);
+        final Connection pureConnection = context.pureModel.getConnection(context.pureModel.buildPackageString(packageableConnection._package, packageableConnection.name), packageableConnection.sourceInformation);
         packageableConnection.connectionValue.accept(new ConnectionSecondPassBuilder(context, pureConnection));
     }
 }
